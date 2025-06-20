@@ -26,18 +26,19 @@ class SiteBuilder:
         
         # Site configuration - modify these values as needed
         self.config = {
-            'name': 'Dr. Alex Smith',
-            'bio': '''<p>I am a researcher in computer science with a focus on machine learning and artificial intelligence. 
-                     My work spans theoretical foundations and practical applications of AI systems.</p>
-                     <p>I am currently a postdoctoral researcher at Example University, where I work on developing 
-                     more interpretable and robust machine learning models.</p>''',
-            'research_description': '''I research the intersection of machine learning theory and practice, 
-                                    with particular interest in explainable AI and robustness of neural networks.''',
-            'blog_description': '''I write about machine learning research, academic life, and thoughts on the future of AI.''',
+            'title': 'Jonathon Schwartz',
+            'email': 'jonathon.schwartz12 at gmail dot com',
+            'github': 'https://github.com/Jjschwartz',
+            'scholar': 'https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl',
+            'name': 'Jonathon Schwartz',
+            'bio': '''<p>Hi! I am a researcher at <a href="https://imbue.com/">Imbue</a> where I work on building machine learning agents and software that help humans code.</p> 
+                <p>Previously, I completed my PhD at the Australian National University, advised by  <a href="https://comp.anu.edu.au/people/hanna-kurniawati/">Hanna Kurniawati</a>.
+                My thesis focused on building practical agents for partially observable, multi-agent environments by leveraging the combination of planning and reinforcement learning.</p>
+                <p>When I'm not running experiments, I spend my time rock climbing.</p>''',
             'publications': [
                 {
-                    'title': 'Understanding Deep Learning Through Information Theory',
-                    'year': 2023,
+                    'title': 'POSGGym: A Library for Decision-Theoretic Planning and Learning in Partially Observable, Multi-Agent Environments',
+                    'year': 2024,
                     'authors': 'Alex Smith, Jane Doe, John Wilson',
                     'venue': 'International Conference on Machine Learning (ICML)',
                     'pdf_url': 'assets/papers/smith2023understanding.pdf',
@@ -50,7 +51,8 @@ class SiteBuilder:
                     'venue': 'Journal of Machine Learning Research',
                     'pdf_url': 'assets/papers/smith2022robust.pdf'
                 }
-            ]
+            ],
+            'updated_at': datetime.now().strftime('%Y-%m-%d')
         }
     
     def clean_output_dir(self):
@@ -210,14 +212,15 @@ class SiteBuilder:
         # Fill homepage template with content
         homepage_content = homepage_template.replace('{{ name }}', self.config['name'])
         homepage_content = homepage_content.replace('{{ bio }}', self.config['bio'])
-        homepage_content = homepage_content.replace('{{ research_description }}', self.config['research_description'])
-        homepage_content = homepage_content.replace('{{ blog_description }}', self.config['blog_description'])
         homepage_content = homepage_content.replace('{{ publications }}', self.generate_publications_html())
         homepage_content = homepage_content.replace('{{ recent_posts }}', self.generate_recent_posts_html())
         homepage_content = homepage_content.replace('{{ current_year }}', str(datetime.now().year))
+        homepage_content = homepage_content.replace('{{ updated_at }}', self.config['updated_at'])
+        homepage_content = homepage_content.replace('{{ email }}', self.config['email'])
+        homepage_content = homepage_content.replace('{{ scholar_url }}', self.config['scholar'])
         
         # Fill base template
-        final_html = base_template.replace('{{ title }}', self.config['name'])
+        final_html = base_template.replace('{{ title }}', self.config['title'])
         final_html = final_html.replace('{{ description }}', f"Personal website of {self.config['name']}")
         final_html = final_html.replace('{{ content }}', homepage_content)
         

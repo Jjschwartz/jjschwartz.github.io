@@ -6,7 +6,6 @@
         </ul>
         <ul>
             <li><a href="#about">About</a></li>
-            <li><a href="#research">Research</a></li>
             <li><a href="#blog">Blog</a></li>
         </ul>
     </div>
@@ -24,10 +23,7 @@
 
     <!-- Research Section -->
     <section id="research">
-        <h2>Research</h2>
-        <p>{{ research_description }}</p>
-        
-        <h3>Publications</h3>
+        <h2>Selected Publications <a href="{{ scholar_url }}">(See all)</a></h2>
         <div class="publications">
             {{ publications }}
         </div>
@@ -36,8 +32,6 @@
     <!-- Blog Section -->
     <section id="blog">
         <h2>Blog</h2>
-        <p>{{ blog_description }}</p>
-        
         <div class="blog-posts">
             {{ recent_posts }}
         </div>
@@ -46,6 +40,6 @@
 
 <footer>
     <div class="container">
-        <p>&copy; {{ current_year }} {{ name }}. All rights reserved.</p>
+        <p>&copy; {{ email }}. Last updated: {{ updated_at }}.</p>
     </div>
 </footer>
