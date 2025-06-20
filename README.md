@@ -1,52 +1,41 @@
-# Personal Academic Website
+# My Website
 
-A minimal static website generator for academics and developers to share research papers and blog posts. Built with Python, Markdown, and Pico.css for fast loading times and clean design.
-
-## Features
-
-- 🚀 **Fast builds** - Under 1 second for 100+ posts
-- 📝 **Markdown-based** - Write content in Markdown with YAML frontmatter
-- 🎨 **Clean design** - Responsive layout using Pico.css
-- 🔗 **Single-page homepage** - Smooth scrolling navigation
-- 📱 **Mobile-friendly** - Responsive design works on all devices
-- ⚡ **Zero JavaScript** - Pure HTML and CSS for maximum performance
-- 🔍 **SEO-friendly** - Semantic HTML and proper meta tags
+A minimal static website. Includes a simple markdown to html generator.
 
 ## Quick Start
 
-1. **Install dependencies**:
+1. **Build the site**:
 
    ```bash
-   pip install -r requirements.txt
+   uv run build.py
    ```
 
-2. **Build the site**:
+2. **View the site**:
 
-   ```bash
-   python build.py
-   ```
-
-3. **View the site**:
-   Open `public/index.html` in your browser
+  ```bash
+  open `public/index.html`
+  # or open in your browser
+  ```
 
 ## Project Structure
 
-```
+```text
 ├── build.py              # Static site generator script
-├── requirements.txt      # Python dependencies
+├── pyproject.toml        # Python dependencies
+├── uv.lock               # Python dependencies
 ├── content/              # Content source files
-│   ├── blog/            # Blog posts (Markdown)
-│   └── assets/          # Static assets
-│       ├── images/      # Images (including profile photo)
-│       └── papers/      # Research papers (PDFs)
-├── templates/           # HTML templates
-│   ├── base.html       # Base template with common HTML structure
-│   ├── homepage.html   # Homepage layout
-│   └── post.html       # Blog post layout
-└── public/             # Generated website (output)
-    ├── index.html      # Homepage
-    ├── blog/           # Individual blog post pages
-    └── assets/         # Copied static assets
+│   ├── blog/             # Blog posts (Markdown)
+│   └── assets/           # Static assets
+│       ├── images/       # Images (including profile photo)
+│       └── papers/       # Research papers (PDFs)
+├── templates/            # HTML templates
+│   ├── base.html         # Base template with common HTML structure
+│   ├── homepage.html     # Homepage layout
+│   └── post.html         # Blog post layout
+└── public/               # Generated website (output)
+    ├── index.html        # Homepage
+    ├── blog/             # Individual blog post pages
+    └── assets/           # Copied static assets
 ```
 
 ## Adding Content
@@ -55,7 +44,7 @@ A minimal static website generator for academics and developers to share researc
 
 1. Create a new Markdown file in `content/blog/` with the naming convention:
 
-   ```
+   ```text
    YYYY-MM-DD-post-title.md
    ```
 
@@ -75,7 +64,7 @@ A minimal static website generator for academics and developers to share researc
    python build.py
    ```
 
-### Customizing Your Site
+### Customize the site
 
 Edit the configuration in `build.py` to customize:
 

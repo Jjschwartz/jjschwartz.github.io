@@ -1,0 +1,11 @@
+[project]
+name = "website"
+version = "0.1.0"
+description = "Website generator"
+authors = []
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "markdown",
+    "PyYAML",
+]

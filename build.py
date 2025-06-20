@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 """
-Static Site Generator for Personal Academic Website
-
 This script builds a static website from Markdown content and HTML templates.
 It processes blog posts, generates the homepage, and copies static assets.
 
-Usage: python build.py
+Usage: 
+- uv run build.py
 
-Requirements:
-- Python 3.8+
-- python-markdown library
 """
 
-import os
-import shutil
 import re
+import shutil
+import traceback
 from datetime import datetime
 from pathlib import Path
+
 import markdown
 import yaml
 
@@ -269,7 +266,7 @@ def main():
         builder.build()
     except Exception as e:
         print(f"❌ Build failed: {e}")
-        import traceback
+        
         traceback.print_exc()
         return 1
     
