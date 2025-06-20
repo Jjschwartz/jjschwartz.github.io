@@ -12,10 +12,10 @@ A minimal static website. Includes a simple markdown to html generator.
 
 2. **View the site**:
 
-  ```bash
-  open `public/index.html`
-  # or open in your browser
-  ```
+   ```bash
+   open `public/index.html`
+   # or open in your browser
+   ```
 
 ## Deployment
 
@@ -23,10 +23,10 @@ A minimal static website. Includes a simple markdown to html generator.
 # Build the site
 uv run build.py
 
-# Switch to gh-pages branch
+# Switch to gh-pages branch (which is the branch that GitHub Pages uses)
 git switch gh-pages
 
-# Copy built files
+# Copy built files to the root directory (which is the branch that GitHub Pages uses)
 cp -r public/* .
 
 # Commit and push
