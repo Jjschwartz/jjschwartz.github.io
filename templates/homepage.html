@@ -1,0 +1,51 @@
+<!-- Homepage template with placeholder variables for dynamic content -->
+<nav>
+    <div class="container">
+        <ul>
+            <li><strong><a href="#about" style="text-decoration: none;">{{ name }}</a></strong></li>
+        </ul>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#research">Research</a></li>
+            <li><a href="#blog">Blog</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- About Section -->
+    <section id="about">
+        <div style="text-align: center;">
+            <img src="assets/images/profile.jpg" alt="{{ name }} profile photo" class="profile-image">
+            <h1>{{ name }}</h1>
+            {{ bio }}
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research">
+        <h2>Research</h2>
+        <p>{{ research_description }}</p>
+        
+        <h3>Publications</h3>
+        <div class="publications">
+            {{ publications }}
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog">
+        <h2>Blog</h2>
+        <p>{{ blog_description }}</p>
+        
+        <div class="blog-posts">
+            {{ recent_posts }}
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; {{ current_year }} {{ name }}. All rights reserved.</p>
+    </div>
+</footer>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        /* Custom styles for smooth scrolling and navigation */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--background-color);
+            border-bottom: var(--border-width) solid var(--muted-border-color);
+        }
+        
+        main {
+            margin-top: 80px;
+        }
+        
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .publication {
+            margin-bottom: 1.5rem;
+        }
+        
+        .publication-title {
+            font-weight: bold;
+        }
+        
+        .publication-venue {
+            font-style: italic;
+        }
+        
+        .blog-post-item {
+            margin-bottom: 1rem;
+        }
+        
+        .blog-post-date {
+            color: var(--muted-color);
+            font-size: 0.9em;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: var(--border-width) solid var(--muted-border-color);
+        }
+    </style>
+</head>
+<body>
+    {{ content }}
+</body>
+</html>
