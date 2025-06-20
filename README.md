@@ -17,6 +17,24 @@ A minimal static website. Includes a simple markdown to html generator.
   # or open in your browser
   ```
 
+## Deployment
+
+```bash
+# Build the site
+uv run build.py
+
+# Switch to gh-pages branch
+git switch gh-pages
+
+# Copy built files
+cp -r public/* .
+
+# Commit and push
+git add .
+git commit -m "Update site"
+git push origin gh-pages
+```
+
 ## Project Structure
 
 ```text
