@@ -43,8 +43,8 @@ class SiteBuilder:
                 "My thesis focused on building practical agents for partially "
                 "observable, multi-agent environments by leveraging the combination "
                 "of planning and reinforcement learning.</p>"
-                "<p>When I'm not running experiments, I spend my time rock "
-                "climbing.</p>"
+                "<p>When I'm not writing code or running experiments, I spend my time "
+                "rock climbing and being outside in nature.</p>"
             ),
             "publications": [
                 {
