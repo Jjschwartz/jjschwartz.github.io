@@ -7,7 +7,46 @@
     <meta name="description" content="Blog post: Welcome to My Website">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
-        /* Custom styles for smooth scrolling and navigation */
+        /* Custom color scheme */
+        :root {
+            --bg-color: #fefbf6; /* Warm white background */
+            --text-color: #1a1a1a; /* Dark text color */
+            --link-color: #2563eb; /* Blue for links */
+            
+            /* Override Pico.css variables */
+            --background-color: var(--bg-color) !important;
+            --color: var(--text-color) !important;
+        }
+        
+        * {
+            background-color: inherit !important;
+        }
+        
+        html, body {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+        }
+        
+        /* Force background on all major containers */
+        html, body, main, .container, article {
+            background-color: var(--bg-color) !important;
+        }
+        
+        /* Ensure all headings use our text color */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-color) !important;
+        }
+        
+        /* Style links appropriately */
+        a {
+            color: var(--link-color) !important;
+        }
+        
+        /* Navigation links should be dark */
+        nav a {
+            color: var(--text-color) !important;
+        }
+        
         html {
             scroll-behavior: smooth;
         }
@@ -78,7 +117,6 @@
         </ul>
         <ul>
             <li><a href="../index.html#about">About</a></li>
-            <li><a href="../index.html#research">Research</a></li>
             <li><a href="../index.html#blog">Blog</a></li>
         </ul>
     </div>
