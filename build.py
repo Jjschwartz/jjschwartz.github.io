@@ -17,7 +17,7 @@ import traceback
 import markdown
 import yaml
 
-from db import PAPERS
+from db import MY_NAME, PAPERS
 
 
 class SiteBuilder:
@@ -181,8 +181,15 @@ class SiteBuilder:
         for paper in PAPERS:
             html += '<div class="publication">\n'
             html += f'  <div class="publication-title">{paper.title}</div>\n'
-            html += f"  <div>{paper.authors} ({paper.year})</div>\n"
-            html += f'  <div class="publication-venue">{paper.venue}</div>\n'
+            
+            # Bold my name in the author list
+            authors_text = paper.authors.replace(MY_NAME, f"<strong>{MY_NAME}</strong>")
+            html += f"  <div>{authors_text}</div>\n"
+            venue_year_block = '  <div class="publication-venue">'
+            if paper.venue:
+                venue_year_block += f'{paper.venue}'
+            venue_year_block += f" ({paper.year})</div>\n"
+            html += venue_year_block
 
             # Add links from urls dictionary
             if paper.urls:
