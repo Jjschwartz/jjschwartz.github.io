@@ -147,22 +147,17 @@
         
         .project {
             margin-bottom: 1.5rem;
-        }
-        
-        .project-title {
-            font-weight: bold;
-        }
-        
-        .project-description {
             line-height: 1.5;
         }
         
-        .project-links {
-            font-size: 0.9rem;
+        .project-link {
+            font-weight: bold;
+            color: var(--link-color) !important;
+            text-decoration: none;
         }
         
-        .project-links a {
-            color: var(--link-color) !important;
+        .project-link:hover {
+            text-decoration: underline;
         }
         
         .blog-post-item {
@@ -306,14 +301,10 @@
         <h2>Open Source Projects</h2>
         <div class="projects">
             <div class="project">
-  <div class="project-title">POSGGym</div>
-  <div class="project-description">A library for building and testing decision-theoretic agents in partially observable, multi-agent environments. Provides a unified interface for POMDP and Dec-POMDP environments with realistic domains like pursuit-evasion and cyber security.</div>
-  <div class="project-links"><a href="https://github.com/RDLLab/posggym" target="_blank">github</a> | <a href="https://posggym.readthedocs.io/" target="_blank">docs</a> | <a href="https://pypi.org/project/posggym/" target="_blank">pypi</a></div>
+  <a href="https://github.com/RDLLab/posggym" target="_blank" class="project-link">POSGGym</a> A collection of environments and reference agents for planning and reinforcement learning research in partially observable, multi-agent environments. Related to this is also <a href='https://github.com/RDLLab/posggym-baselines' target='_blank'>POSGGym-Baselines</a> which contains baseline implementations of planning and reinforcement learning algorithms for POSGGym environments.
 </div>
 <div class="project">
-  <div class="project-title">Network Attack Simulator</div>
-  <div class="project-description">Reinforcement learning environment for training autonomous penetration testing agents. Simulates realistic network topologies and attack scenarios.</div>
-  <div class="project-links"><a href="https://github.com/Jjschwartz/NetworkAttackSimulator" target="_blank">github</a></div>
+  <a href="https://github.com/Jjschwartz/NetworkAttackSimulator" target="_blank" class="project-link">Network Attack Simulator</a> Reinforcement learning environment for training autonomous network penetration testing agents. Simulates attack scenarios involving different network topologies vulnerabilities, scans, and exploits.
 </div>
 
         </div>

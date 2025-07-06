@@ -25,7 +25,7 @@ class Project:
 
     title: str
     description: str
-    urls: Optional[Dict[str, str]] = None
+    url: str
 
 MY_NAME = "Jonathon Schwartz"
 
@@ -110,18 +110,19 @@ PAPERS = [
 PROJECTS = [
     Project(
         title="POSGGym",
-        description="A library for building and testing decision-theoretic agents in partially observable, multi-agent environments. Provides a unified interface for POMDP and Dec-POMDP environments with realistic domains like pursuit-evasion and cyber security.",
-        urls={
-            "github": "https://github.com/RDLLab/posggym",
-            "docs": "https://posggym.readthedocs.io/",
-            "pypi": "https://pypi.org/project/posggym/"
-        }
+        description=(
+            "A collection of environments and reference agents for planning and reinforcement learning research in partially observable, multi-agent environments. "
+            "Related to this is also <a href='https://github.com/RDLLab/posggym-baselines' target='_blank'>POSGGym-Baselines</a> which contains baseline "
+            "implementations of planning and reinforcement learning algorithms for POSGGym environments."
+        ),
+        url="https://github.com/RDLLab/posggym"
     ),
     Project(
         title="Network Attack Simulator",
-        description="Reinforcement learning environment for training autonomous penetration testing agents. Simulates realistic network topologies and attack scenarios.",
-        urls={
-            "github": "https://github.com/Jjschwartz/NetworkAttackSimulator"
-        }
+        description=(
+            "Reinforcement learning environment for training autonomous network penetration testing agents. "
+            "Simulates attack scenarios involving different network topologies vulnerabilities, scans, and exploits."
+        ),
+        url="https://github.com/Jjschwartz/NetworkAttackSimulator"
     ),
 ]

@@ -209,20 +209,12 @@ class SiteBuilder:
         html = ""
         for project in PROJECTS:
             html += '<div class="project">\n'
-            html += f'  <div class="project-title">{project.title}</div>\n'
-            html += f'  <div class="project-description">{project.description}</div>\n'
-            
-            # Add links from urls dictionary
-            if project.urls:
-                links = []
-                for name, url in project.urls.items():
-                    links.append(f'<a href="{url}" target="_blank">{name}</a>')
-                
-                if links:
-                    html += f'  <div class="project-links">{" | ".join(links)}</div>\n'
-            
-            html += '</div>\n'
-        
+            html += (
+                f'  <a href="{project.url}" target="_blank" class="project-link">'
+                f'{project.title}</a> {project.description}\n'
+            )
+            html += "</div>\n"
+
         return html
 
     def generate_recent_posts_html(self):
