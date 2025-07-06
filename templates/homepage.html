@@ -15,10 +15,13 @@
 <main class="container">
     <!-- About Section -->
     <section id="about">
-        <div style="text-align: center;">
-            <img src="assets/images/profile.jpg" alt="{{ name }} profile photo" class="profile-image">
-            <h1>{{ name }}</h1>
-            {{ bio }}
+        <div class="about-content">
+            <div class="about-left">
+                <img src="assets/images/profile.jpg" alt="{{ name }} profile photo" class="profile-image">
+            </div>
+            <div class="about-right">
+                <div class="bio-text">{{ bio }}</div>
+            </div>
         </div>
     </section>
 

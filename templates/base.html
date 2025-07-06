@@ -87,13 +87,48 @@
             margin-top: 80px;
         }
         
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .about-left {
+            flex-shrink: 0;
+        }
+        
         .profile-image {
-            width: 200px;
-            height: 200px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto;
-            display: block;
+        }
+        
+        .about-right {
+            flex: 1;
+        }
+        
+        .bio-text {
+            text-align: left;
+            line-height: 1.6;
+        }
+        
+        .bio-text p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+            
+            .bio-text {
+                text-align: center;
+            }
         }
         
         .publication {

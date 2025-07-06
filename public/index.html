@@ -87,13 +87,48 @@
             margin-top: 80px;
         }
         
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .about-left {
+            flex-shrink: 0;
+        }
+        
         .profile-image {
-            width: 200px;
-            height: 200px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto;
-            display: block;
+        }
+        
+        .about-right {
+            flex: 1;
+        }
+        
+        .bio-text {
+            text-align: left;
+            line-height: 1.6;
+        }
+        
+        .bio-text p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+            
+            .bio-text {
+                text-align: center;
+            }
         }
         
         .publication {
@@ -148,10 +183,13 @@
 <main class="container">
     <!-- About Section -->
     <section id="about">
-        <div style="text-align: center;">
-            <img src="assets/images/profile.jpg" alt="Jonathon Schwartz profile photo" class="profile-image">
-            <h1>Jonathon Schwartz</h1>
-            <p>Hi! I am a researcher at <a href="https://imbue.com/">Imbue</a> where I work on building machine learning agents and software that help humans code.</p> <p>Previously, I completed my PhD at the Australian National University, advised by <a href="https://comp.anu.edu.au/people/hanna-kurniawati/">Hanna Kurniawati</a>. My thesis focused on building practical agents for partially observable, multi-agent environments by leveraging the combination of planning and reinforcement learning.</p><p>When I'm not running experiments, I spend my time rock climbing.</p>
+        <div class="about-content">
+            <div class="about-left">
+                <img src="assets/images/profile.jpg" alt="Jonathon Schwartz profile photo" class="profile-image">
+            </div>
+            <div class="about-right">
+                <div class="bio-text"><p>Hi! I am a researcher at <a href="https://imbue.com/">Imbue</a> where I work on building machine learning agents and software that help humans code.</p> <p>Previously, I completed my PhD at the Australian National University, advised by <a href="https://comp.anu.edu.au/people/hanna-kurniawati/">Hanna Kurniawati</a>. My thesis focused on building practical agents for partially observable, multi-agent environments by leveraging the combination of planning and reinforcement learning.</p><p>When I'm not running experiments, I spend my time rock climbing.</p></div>
+            </div>
         </div>
     </section>
 
