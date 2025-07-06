@@ -17,6 +17,8 @@ import traceback
 import markdown
 import yaml
 
+from db import PAPERS
+
 
 class SiteBuilder:
     def __init__(self):
@@ -33,7 +35,7 @@ class SiteBuilder:
             "scholar": "https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl",
             "name": "Jonathon Schwartz",
             "bio": (
-                '<p>Hi! I am a researcher at <a href="https://imbue.com/">Imbue</a> '
+                '<p>Hello! I am a researcher at <a href="https://imbue.com/">Imbue</a> '
                 "where I work on building machine learning agents and software that "
                 "help humans code.</p> "
                 "<p>Previously, I completed my PhD at the Australian National "
@@ -46,26 +48,6 @@ class SiteBuilder:
                 "<p>When I'm not writing code or running experiments, I spend my time "
                 "rock climbing and being outside in nature.</p>"
             ),
-            "publications": [
-                {
-                    "title": (
-                        "POSGGym: A Library for Decision-Theoretic Planning and "
-                        "Learning in Partially Observable, Multi-Agent Environments"
-                    ),
-                    "year": 2024,
-                    "authors": "Alex Smith, Jane Doe, John Wilson",
-                    "venue": "International Conference on Machine Learning (ICML)",
-                    "pdf_url": "assets/papers/smith2023understanding.pdf",
-                    "arxiv_url": "https://arxiv.org/abs/2301.12345",
-                },
-                {
-                    "title": "Robust Neural Networks: A Survey",
-                    "year": 2022,
-                    "authors": "Alex Smith, Sarah Johnson",
-                    "venue": "Journal of Machine Learning Research",
-                    "pdf_url": "assets/papers/smith2022robust.pdf",
-                },
-            ],
             "updated_at": datetime.now().strftime("%Y-%m-%d"),
         }
 
@@ -196,21 +178,20 @@ class SiteBuilder:
     def generate_publications_html(self):
         """Generate HTML for the publications section"""
         html = ""
-        for pub in self.config["publications"]:
+        for paper in PAPERS:
             html += '<div class="publication">\n'
-            html += f'  <div class="publication-title">{pub["title"]}</div>\n'
-            html += f"  <div>{pub['authors']} ({pub['year']})</div>\n"
-            html += f'  <div class="publication-venue">{pub["venue"]}</div>\n'
+            html += f'  <div class="publication-title">{paper.title}</div>\n'
+            html += f"  <div>{paper.authors} ({paper.year})</div>\n"
+            html += f'  <div class="publication-venue">{paper.venue}</div>\n'
 
-            # Add links
-            links = []
-            if "pdf_url" in pub:
-                links.append(f'<a href="{pub["pdf_url"]}">PDF</a>')
-            if "arxiv_url" in pub:
-                links.append(f'<a href="{pub["arxiv_url"]}">arXiv</a>')
+            # Add links from urls dictionary
+            if paper.urls:
+                links = []
+                for name, url in paper.urls.items():
+                    links.append(f'<a href="{url}">{name}</a>')
 
-            if links:
-                html += f"  <div>{' | '.join(links)}</div>\n"
+                if links:
+                    html += f"  <div>{' | '.join(links)}</div>\n"
 
             html += "</div>\n"
 
@@ -253,7 +234,9 @@ class SiteBuilder:
             "{{ updated_at }}", self.config["updated_at"]
         )
         homepage_content = homepage_content.replace("{{ email }}", self.config["email"])
-        homepage_content = homepage_content.replace("{{ github }}", self.config["github"])
+        homepage_content = homepage_content.replace(
+            "{{ github }}", self.config["github"]
+        )
         homepage_content = homepage_content.replace(
             "{{ scholar_url }}", self.config["scholar"]
         )
