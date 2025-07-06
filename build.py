@@ -17,7 +17,7 @@ import traceback
 import markdown
 import yaml
 
-from db import MY_NAME, PAPERS
+from db import MY_NAME, PAPERS, PROJECTS
 
 
 class SiteBuilder:
@@ -204,6 +204,27 @@ class SiteBuilder:
 
         return html
 
+    def generate_projects_html(self):
+        """Generate HTML for the projects section"""
+        html = ""
+        for project in PROJECTS:
+            html += '<div class="project">\n'
+            html += f'  <div class="project-title">{project.title}</div>\n'
+            html += f'  <div class="project-description">{project.description}</div>\n'
+            
+            # Add links from urls dictionary
+            if project.urls:
+                links = []
+                for name, url in project.urls.items():
+                    links.append(f'<a href="{url}" target="_blank">{name}</a>')
+                
+                if links:
+                    html += f'  <div class="project-links">{" | ".join(links)}</div>\n'
+            
+            html += '</div>\n'
+        
+        return html
+
     def generate_recent_posts_html(self):
         """Generate HTML for recent blog posts"""
         html = ""
@@ -230,6 +251,9 @@ class SiteBuilder:
         homepage_content = homepage_content.replace("{{ bio }}", self.config["bio"])
         homepage_content = homepage_content.replace(
             "{{ publications }}", self.generate_publications_html()
+        )
+        homepage_content = homepage_content.replace(
+            "{{ projects }}", self.generate_projects_html()
         )
         homepage_content = homepage_content.replace(
             "{{ recent_posts }}", self.generate_recent_posts_html()

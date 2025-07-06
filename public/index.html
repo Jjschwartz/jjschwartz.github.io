@@ -145,6 +145,26 @@
             font-style: italic;
         }
         
+        .project {
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-title {
+            font-weight: bold;
+        }
+        
+        .project-description {
+            line-height: 1.5;
+        }
+        
+        .project-links {
+            font-size: 0.9rem;
+        }
+        
+        .project-links a {
+            color: var(--link-color) !important;
+        }
+        
         .blog-post-item {
             margin-bottom: 1rem;
         }
@@ -212,6 +232,7 @@
         <div class="nav-right">
             <a href="#about">About</a>
             <a href="#research">Research</a>
+            <a href="#projects">Projects</a>
             <a href="#blog">Blog</a>
         </div>
     </div>
@@ -232,7 +253,7 @@
 
     <!-- Research Section -->
     <section id="research">
-        <h2>Selected Publications <a href="https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl">(See all)</a></h2>
+        <h2>Selected Publications <a href="https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl">(see all)</a></h2>
         <div class="publications">
             <div class="publication">
   <div class="publication-title">Towards Scalable Planning in Partially Observable, Multi-Agent Environments</div>
@@ -275,6 +296,24 @@
   <div><strong>Jonathon Schwartz</strong></div>
   <div class="publication-venue">Undergraduate Thesis (2019)</div>
   <div><a href="https://arxiv.org/pdf/1905.05965">thesis</a> | <a href="https://github.com/Jjschwartz/NetworkAttackSimulator">code</a></div>
+</div>
+
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2>Open Source Projects</h2>
+        <div class="projects">
+            <div class="project">
+  <div class="project-title">POSGGym</div>
+  <div class="project-description">A library for building and testing decision-theoretic agents in partially observable, multi-agent environments. Provides a unified interface for POMDP and Dec-POMDP environments with realistic domains like pursuit-evasion and cyber security.</div>
+  <div class="project-links"><a href="https://github.com/RDLLab/posggym" target="_blank">github</a> | <a href="https://posggym.readthedocs.io/" target="_blank">docs</a> | <a href="https://pypi.org/project/posggym/" target="_blank">pypi</a></div>
+</div>
+<div class="project">
+  <div class="project-title">Network Attack Simulator</div>
+  <div class="project-description">Reinforcement learning environment for training autonomous penetration testing agents. Simulates realistic network topologies and attack scenarios.</div>
+  <div class="project-links"><a href="https://github.com/Jjschwartz/NetworkAttackSimulator" target="_blank">github</a></div>
 </div>
 
         </div>

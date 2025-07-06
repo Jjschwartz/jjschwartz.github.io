@@ -18,6 +18,15 @@ class Paper:
     urls: Optional[Dict[str, str]] = None
     description: Optional[str] = None
 
+
+@dataclass
+class Project:
+    """Represents an open source project."""
+
+    title: str
+    description: str
+    urls: Optional[Dict[str, str]] = None
+
 MY_NAME = "Jonathon Schwartz"
 
 
@@ -94,5 +103,25 @@ PAPERS = [
             "thesis": "https://arxiv.org/pdf/1905.05965",
             "code": "https://github.com/Jjschwartz/NetworkAttackSimulator",
         },
+    ),
+]
+
+
+PROJECTS = [
+    Project(
+        title="POSGGym",
+        description="A library for building and testing decision-theoretic agents in partially observable, multi-agent environments. Provides a unified interface for POMDP and Dec-POMDP environments with realistic domains like pursuit-evasion and cyber security.",
+        urls={
+            "github": "https://github.com/RDLLab/posggym",
+            "docs": "https://posggym.readthedocs.io/",
+            "pypi": "https://pypi.org/project/posggym/"
+        }
+    ),
+    Project(
+        title="Network Attack Simulator",
+        description="Reinforcement learning environment for training autonomous penetration testing agents. Simulates realistic network topologies and attack scenarios.",
+        urls={
+            "github": "https://github.com/Jjschwartz/NetworkAttackSimulator"
+        }
     ),
 ]
