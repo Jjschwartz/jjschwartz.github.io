@@ -125,4 +125,12 @@ PROJECTS = [
         ),
         url="https://github.com/Jjschwartz/NetworkAttackSimulator"
     ),
+    Project(
+        title="miniDRL",
+        description=(
+            "Minimal implementations of distributed, recurrent, deep reinforcement learning algorithms (PPO, R2D2). "
+            "Distributed RL, especially recurrent RL, gets pretty complex fast, so I wanted to write easy-to-follow stand-alone implementations of some distributed RL algorithms"
+        ),
+        url="https://github.com/Jjschwartz/miniDRL"
+    ),
 ]
