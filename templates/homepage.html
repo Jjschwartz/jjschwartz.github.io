@@ -1,13 +1,14 @@
 <!-- Homepage template with placeholder variables for dynamic content -->
 <nav>
-    <div class="container">
-        <ul>
-            <li><strong><a href="#about" style="text-decoration: none;">{{ name }}</a></strong></li>
-        </ul>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#blog">Blog</a></li>
-        </ul>
+    <div class="container nav-content">
+        <div class="nav-left">
+            <strong><a href="#about" class="nav-name">{{ name }}</a></strong>
+        </div>
+        <div class="nav-right">
+            <a href="#about">About</a>
+            <a href="#research">Research</a>
+            <a href="#blog">Blog</a>
+        </div>
     </div>
 </nav>
 

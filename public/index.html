@@ -61,6 +61,28 @@
             border-bottom: var(--border-width) solid var(--muted-border-color);
         }
         
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .nav-left .nav-name {
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        
+        .nav-right {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-right a {
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
         main {
             margin-top: 80px;
         }
@@ -111,14 +133,15 @@
 <body>
     <!-- Homepage template with placeholder variables for dynamic content -->
 <nav>
-    <div class="container">
-        <ul>
-            <li><strong><a href="#about" style="text-decoration: none;">Jonathon Schwartz</a></strong></li>
-        </ul>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#blog">Blog</a></li>
-        </ul>
+    <div class="container nav-content">
+        <div class="nav-left">
+            <strong><a href="#about" class="nav-name">Jonathon Schwartz</a></strong>
+        </div>
+        <div class="nav-right">
+            <a href="#about">About</a>
+            <a href="#research">Research</a>
+            <a href="#blog">Blog</a>
+        </div>
     </div>
 </nav>
 
