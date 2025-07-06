@@ -5,8 +5,10 @@ __pycache__/
 
 # VSCode
 .vscode/
-.claude/
 
+# Claude
+.claude/
+CLAUDE.md
 
 # Environments
 .venv
@@ -19,7 +21,6 @@ venv.bak/
 # mkdocs documentation
 /site
 
-
 # pytype static type analyzer
 .pytype/
 
@@ -30,5 +31,7 @@ Desktop.ini
 
 #MacOS system files
 .DS_Store
-CLAUDE.md
+
+# Other files
 inspiration.md
+.ruff_cache/
