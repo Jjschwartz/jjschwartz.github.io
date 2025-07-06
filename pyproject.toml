@@ -8,4 +8,16 @@ requires-python = ">=3.8"
 dependencies = [
     "markdown",
     "PyYAML",
+    "ruff"
 ]
+
+[tool.ruff]
+# Enable import sorting
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+
