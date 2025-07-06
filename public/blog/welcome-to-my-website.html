@@ -16,6 +16,8 @@
             /* Override Pico.css variables */
             --background-color: var(--bg-color) !important;
             --color: var(--text-color) !important;
+            --spacing: 0.25rem;
+            --typography-spacing-vertical: 0.25rem !important; 
         }
         
         * {
@@ -32,9 +34,10 @@
             background-color: var(--bg-color) !important;
         }
         
-        /* Ensure all headings use our text color */
+        /* Ensure all headings use our text color and reduce spacing */
         h1, h2, h3, h4, h5, h6 {
             color: var(--text-color) !important;
+            margin-bottom: 0.5rem !important;
         }
         
         /* Style links appropriately */
@@ -153,16 +156,50 @@
         }
         
         section {
-            margin-bottom: 3rem;
-            padding: 2rem 0;
+            margin-bottom: 0rem;
+            padding: 1rem 0;
             scroll-margin-top: 100px; /* Ensure section headers appear below nav */
         }
         
         footer {
             text-align: center;
-            margin-top: 3rem;
-            padding: 2rem 0;
+            margin-top: 0rem;
             border-top: var(--border-width) solid var(--muted-border-color);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--text-color) !important;
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: var(--link-color) !important;
+        }
+        
+        .footer-link svg {
+            width: 36px;
+            height: 36px;
+            fill: currentColor;
+        }
+        
+        .footer-text {
+            margin: 0;
+            color: var(--muted-color);
+            font-size: 0.9rem;
         }
     </style>
 </head>

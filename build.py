@@ -28,7 +28,7 @@ class SiteBuilder:
         # Site configuration - modify these values as needed
         self.config = {
             "title": "Jonathon Schwartz",
-            "email": "jonathon.schwartz12 at gmail dot com",
+            "email": "jonathon.schwartz12@gmail.com",
             "github": "https://github.com/Jjschwartz",
             "scholar": "https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl",
             "name": "Jonathon Schwartz",
@@ -253,6 +253,7 @@ class SiteBuilder:
             "{{ updated_at }}", self.config["updated_at"]
         )
         homepage_content = homepage_content.replace("{{ email }}", self.config["email"])
+        homepage_content = homepage_content.replace("{{ github }}", self.config["github"])
         homepage_content = homepage_content.replace(
             "{{ scholar_url }}", self.config["scholar"]
         )
