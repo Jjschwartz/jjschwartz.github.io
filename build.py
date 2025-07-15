@@ -133,7 +133,7 @@ class SiteBuilder:
 
                 # Convert markdown to HTML
                 md = markdown.Markdown(
-                    extensions=["codehilite", "tables", "fenced_code"]
+                    extensions=["codehilite", "tables", "fenced_code", "footnotes"]
                 )
                 post_html = md.convert(post["content"])
 

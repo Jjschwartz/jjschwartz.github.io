@@ -6,12 +6,35 @@
     <title>{{ title }}</title>
     <meta name="description" content="{{ description }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    
+    <!-- MathJax for LaTeX math rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        /* Custom color scheme */
+        /* Obsidian-inspired light theme */
         :root {
-            --bg-color: #fafafa; /* Off-white background */
-            --text-color: #1a1a1a; /* Dark text color */
-            --link-color: #2563eb; /* Blue for links */
+            --bg-color: #fafafa; /* Clean light background */
+            --text-color: #2e3338; /* Slightly softer black */
+            --heading-color: #1a202c; /* Dark gray/black for headings */
+            --link-color: #6366f1; /* Indigo links */
+            --muted-text: #64748b; /* Muted text color */
+            --border-color: #e2e8f0; /* Light border */
+            --code-bg: #f1f5f9; /* Light code background */
+            --blockquote-bg: #f8fafc; /* Light blockquote background */
+            --table-bg: rgba(248, 250, 252, 0.5); /* Subtle table background */
             
             /* Override Pico.css variables */
             --background-color: var(--bg-color) !important;
@@ -26,6 +49,8 @@
         html, body {
             background-color: var(--bg-color) !important;
             color: var(--text-color) !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            line-height: 1.65;
         }
         
         /* Force background on all major containers */
@@ -33,20 +58,175 @@
             background-color: var(--bg-color) !important;
         }
         
-        /* Ensure all headings use our text color and reduce spacing */
+        /* Obsidian-style heading hierarchy */
         h1, h2, h3, h4, h5, h6 {
-            color: var(--text-color) !important;
-            margin-bottom: 0.5rem !important;
+            color: var(--heading-color) !important;
+            margin-top: 2rem !important;
+            margin-bottom: 1rem !important;
+            font-weight: 600;
+            letter-spacing: -0.025em;
         }
         
-        /* Style links appropriately */
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0 !important;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.375rem;
+        }
+        
+        /* Better paragraph spacing */
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-color);
+        }
+        
+        /* Obsidian-style links */
         a {
             color: var(--link-color) !important;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        a:hover {
+            text-decoration: underline;
         }
         
         /* Navigation links should be dark */
         nav a {
             color: var(--text-color) !important;
+        }
+        
+        /* Obsidian-style code blocks */
+        pre {
+            background: var(--code-bg) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        code {
+            background: var(--code-bg) !important;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 0.875em;
+            color: var(--text-color);
+        }
+        
+        /* Obsidian-style blockquotes */
+        blockquote {
+            background: var(--blockquote-bg);
+            border-left: 4px solid var(--link-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        
+        /* Better table styling */
+        table {
+            background: var(--table-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--text-color);
+            padding: 0.75rem;
+        }
+        
+        td {
+            padding: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Better list styling */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Images with subtle styling */
+        img {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem 0;
+        }
+        
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+        
+        /* MathJax styling */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+        
+        /* Display math (block equations) */
+        .MathJax_Display {
+            margin: 1.5rem 0 !important;
+        }
+        
+        /* Center display math */
+        mjx-container[display="true"] {
+            display: block !important;
+            text-align: center !important;
+            margin: 1.5rem 0 !important;
+        }
+        
+        /* Footnote styling */
+        .footnote {
+            font-size: 0.875rem;
+            color: var(--muted-text);
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border-color);
+        }
+        
+        .footnote p {
+            margin: 0.5rem 0;
+        }
+        
+        a.footnote-ref {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 0.8em;
+            vertical-align: super;
+            padding: 0 0.2em;
+        }
+        
+        a.footnote-ref:hover {
+            text-decoration: underline;
+        }
+        
+        .footnote-backref {
+            margin-left: 0.5rem;
+            font-size: 0.8em;
         }
         
         html {
@@ -165,8 +345,9 @@
         }
         
         .blog-post-date {
-            color: var(--muted-color);
+            color: var(--muted-text);
             font-size: 0.9em;
+            font-weight: 400;
         }
         
         section {
