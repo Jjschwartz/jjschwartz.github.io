@@ -42,9 +42,7 @@
             --spacing: 0.25rem;
         }
         
-        * {
-            background-color: inherit !important;
-        }
+        /* Remove overly broad inheritance rule that was hiding text */
         
         html, body {
             background-color: var(--bg-color) !important;
@@ -104,9 +102,10 @@
             color: var(--text-color) !important;
         }
         
-        /* Obsidian-style code blocks */
+        /* Code block styling */
         pre {
             background: var(--code-bg) !important;
+            color: var(--text-color);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1.5rem;
@@ -134,7 +133,33 @@
             padding: 1rem 1.5rem;
             margin: 1.5rem 0;
             border-radius: 0 8px 8px 0;
-            font-style: italic;
+            font-style: normal;
+        }
+        
+        /* Note callouts - when blockquote starts with **Note:** */
+        blockquote p:first-child:has(strong:first-child) {
+            font-style: normal;
+        }
+        
+        blockquote strong:first-child {
+            color: var(--link-color);
+            font-weight: 600;
+        }
+        
+        /* Special styling for different note types */
+        blockquote:has(strong:first-child:contains("Note:")) {
+            border-left-color: var(--link-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        blockquote:has(strong:first-child:contains("Warning:")) {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        blockquote:has(strong:first-child:contains("Tip:")) {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
         }
         
         /* Better table styling */
@@ -172,7 +197,11 @@
         img {
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin: 1.5rem 0;
+            margin: 1.5rem auto;
+            display: block;
+            max-height: 500px;
+            width: auto;
+            max-width: 100%;
         }
         
         /* Horizontal rule */
@@ -396,7 +425,245 @@
             color: var(--muted-color);
             font-size: 0.9rem;
         }
+        
+        /* Table of Contents Styling */
+        .post-layout {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            max-width: 100%;
+        }
+        
+        .toc-sidebar {
+            width: 250px;
+            min-width: 250px;
+            max-width: 250px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            align-self: flex-start;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            color: var(--heading-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+        
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .toc-list li {
+            margin-bottom: 0.1rem;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.2rem 0;
+            color: var(--muted-text);
+            text-decoration: none;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover {
+            color: var(--link-color);
+            background: rgba(99, 102, 241, 0.1);
+            padding-left: 0.3rem;
+        }
+        
+        .toc-link.active {
+            color: var(--link-color);
+            background: rgba(99, 102, 241, 0.1);
+            padding-left: 0.3rem;
+            font-weight: 600;
+        }
+        
+        /* Different indentation levels for headings */
+        .toc-level-1 .toc-link {
+            padding-left: 0;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .toc-level-2 .toc-link {
+            padding-left: 0.8rem;
+        }
+        
+        .toc-level-3 .toc-link {
+            padding-left: 1.6rem;
+        }
+        
+        .toc-level-4 .toc-link {
+            padding-left: 2.4rem;
+        }
+        
+        .toc-level-5 .toc-link {
+            padding-left: 3.2rem;
+        }
+        
+        .toc-level-6 .toc-link {
+            padding-left: 4rem;
+        }
+        
+        /* Collapsible TOC - hide sub-headings by default */
+        .toc-list li:not(.toc-level-1):not(.toc-level-2) {
+            display: none;
+        }
+        
+        /* Show sub-headings for active sections */
+        .toc-list li.toc-level-1.has-active-child ~ li:not(.toc-level-1):not(.toc-level-2),
+        .toc-list li.toc-level-2.has-active-child ~ li:not(.toc-level-1):not(.toc-level-2) {
+            display: block;
+        }
+        
+        .post-main {
+            flex: 1;
+            min-width: 0;
+            max-width: calc(100% - 250px - 2rem);
+            overflow-wrap: break-word;
+        }
+        
+        /* Responsive design - hide TOC on smaller screens */
+        @media (max-width: 1024px) {
+            .post-layout {
+                flex-direction: column;
+            }
+            
+            .toc-sidebar {
+                position: static;
+                width: 100%;
+                max-height: none;
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .toc-sidebar {
+                display: none;
+            }
+        }
     </style>
+    
+    <!-- Table of Contents scroll tracking script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Only run TOC script on pages that have TOC
+            const tocLinks = document.querySelectorAll('.toc-link');
+            if (tocLinks.length === 0) return;
+            
+            const headings = [];
+            const tocLinkMap = new Map();
+            
+            // Build map of headings and their corresponding TOC links
+            tocLinks.forEach(link => {
+                const targetId = link.getAttribute('data-target');
+                const heading = document.getElementById(targetId);
+                if (heading) {
+                    headings.push({
+                        element: heading,
+                        link: link,
+                        id: targetId
+                    });
+                    tocLinkMap.set(targetId, link);
+                }
+            });
+            
+            // Sort headings by their position in the document
+            headings.sort((a, b) => {
+                return a.element.offsetTop - b.element.offsetTop;
+            });
+            
+            function updateActiveLink() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
+                let activeHeading = null;
+                
+                // Find the current active heading
+                for (let i = 0; i < headings.length; i++) {
+                    const heading = headings[i];
+                    const headingTop = heading.element.offsetTop - 100; // Account for fixed nav
+                    
+                    // If we're at the bottom of the page, highlight the last heading
+                    if (scrollY + windowHeight >= documentHeight - 50) {
+                        activeHeading = headings[headings.length - 1];
+                        break;
+                    }
+                    
+                    // If this heading is visible or we've scrolled past it
+                    if (scrollY >= headingTop) {
+                        activeHeading = heading;
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Update active states and show/hide sub-headings
+                tocLinks.forEach(link => link.classList.remove('active'));
+                document.querySelectorAll('.toc-list li').forEach(li => {
+                    li.classList.remove('has-active-child');
+                });
+                
+                if (activeHeading) {
+                    activeHeading.link.classList.add('active');
+                    
+                    // Show sub-headings for active section
+                    const activeLevel = parseInt(activeHeading.link.closest('li').className.match(/toc-level-(\d+)/)[1]);
+                    const activeParent = activeHeading.link.closest('li');
+                    
+                    // Mark parent as having active child to show sub-headings
+                    if (activeLevel <= 2) {
+                        activeParent.classList.add('has-active-child');
+                    }
+                    
+                    // Show sub-headings for this section
+                    let currentLi = activeParent.nextElementSibling;
+                    while (currentLi && currentLi.classList.contains('toc-level-' + (activeLevel + 1))) {
+                        currentLi.style.display = 'block';
+                        currentLi = currentLi.nextElementSibling;
+                    }
+                }
+            }
+            
+            // Add smooth scrolling to TOC links
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        const offsetTop = target.offsetTop - 100; // Account for fixed nav
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Update active link on scroll
+            window.addEventListener('scroll', updateActiveLink);
+            
+            // Initial update
+            updateActiveLink();
+        });
+    </script>
 </head>
 <body>
     <!-- Blog post template for individual posts -->
@@ -415,21 +682,58 @@
 </nav>
 
 <main class="container">
-    <article>
-        <header>
-            <h1>Training GPT2 from 650 to 3 million tokens per second</h1>
-            <p class="blog-post-date">Published on July 13, 2025</p>
-        </header>
+    <div class="post-layout">
+        <aside class="toc-sidebar">
+            <nav class="toc">
+<h3>Contents</h3>
+<ul class="toc-list">
+<li class="toc-level-2"><a href="#why-gpt2" class="toc-link" data-target="why-gpt2">Why GPT2?</a></li>
+<li class="toc-level-2"><a href="#training-my-first-gpt2" class="toc-link" data-target="training-my-first-gpt2">Training my first GPT2</a></li>
+<li class="toc-level-2"><a href="#scoreboard-with-baseline" class="toc-link" data-target="scoreboard-with-baseline">Scoreboard with Baseline</a></li>
+<li class="toc-level-2"><a href="#hardware-juicing" class="toc-link" data-target="hardware-juicing">Hardware juicing</a></li>
+<li class="toc-level-3"><a href="#mps-on-m3" class="toc-link" data-target="mps-on-m3">MPS on M3</a></li>
+<li class="toc-level-3"><a href="#cuda-on-nvidia-rtx-3090-gpu" class="toc-link" data-target="cuda-on-nvidia-rtx-3090-gpu">CUDA on Nvidia RTX 3090 GPU</a></li>
+<li class="toc-level-3"><a href="#the-big-one-cuda-on-nvidia-h100-gpu" class="toc-link" data-target="the-big-one-cuda-on-nvidia-h100-gpu">The big one, CUDA on Nvidia H100 GPU</a></li>
+<li class="toc-level-3"><a href="#all-together-now" class="toc-link" data-target="all-together-now">All together now</a></li>
+<li class="toc-level-2"><a href="#scoreboard-after-hardware-optimizations" class="toc-link" data-target="scoreboard-after-hardware-optimizations">Scoreboard after hardware optimizations</a></li>
+<li class="toc-level-2"><a href="#side-quest-model-flop-utilization-mfu" class="toc-link" data-target="side-quest-model-flop-utilization-mfu">Side quest: Model FLOP Utilization (MFU)</a></li>
+<li class="toc-level-3"><a href="#calculating-mfu" class="toc-link" data-target="calculating-mfu">Calculating MFU</a></li>
+<li class="toc-level-3"><a href="#mfu-for-gpt2-124m" class="toc-link" data-target="mfu-for-gpt2-124m">MFU for GPT2 124M</a></li>
+<li class="toc-level-2"><a href="#software-optimizations-getting-all-the-juice" class="toc-link" data-target="software-optimizations-getting-all-the-juice">Software optimizations: getting all the juice</a></li>
+<li class="toc-level-3"><a href="#algorithmic-improvements" class="toc-link" data-target="algorithmic-improvements">Algorithmic improvements</a></li>
+<li class="toc-level-4"><a href="#usingbfloat16" class="toc-link" data-target="usingbfloat16">Usingbfloat16</a></li>
+<li class="toc-level-4"><a href="#using-flash-attention" class="toc-link" data-target="using-flash-attention">Using Flash Attention</a></li>
+<li class="toc-level-4"><a href="#torchcompile" class="toc-link" data-target="torchcompile">torch.compile</a></li>
+<li class="toc-level-4"><a href="#usingfusedadamw" class="toc-link" data-target="usingfusedadamw">Usingfused_adamw</a></li>
+<li class="toc-level-4"><a href="#enabling-tensorcores" class="toc-link" data-target="enabling-tensorcores">Enabling Tensorcores</a></li>
+<li class="toc-level-4"><a href="#all-together" class="toc-link" data-target="all-together">All together</a></li>
+<li class="toc-level-3"><a href="#tuning-the-batch-size" class="toc-link" data-target="tuning-the-batch-size">Tuning the batch size</a></li>
+<li class="toc-level-2"><a href="#scoreboard-after-software-optimizations" class="toc-link" data-target="scoreboard-after-software-optimizations">Scoreboard after software optimizations</a></li>
+<li class="toc-level-2"><a href="#getting-parallel-ddp" class="toc-link" data-target="getting-parallel-ddp">Getting parallel: DDP</a></li>
+<li class="toc-level-2"><a href="#scoreboard-after-distributed-training" class="toc-link" data-target="scoreboard-after-distributed-training">Scoreboard after Distributed Training</a></li>
+<li class="toc-level-2"><a href="#training-gpt2-124-m-on-10b-tokens" class="toc-link" data-target="training-gpt2-124-m-on-10b-tokens">Training GPT2 124 M on 10B tokens</a></li>
+<li class="toc-level-3"><a href="#hellaswag-benchmark" class="toc-link" data-target="hellaswag-benchmark">Hellaswag Benchmark</a></li>
+<li class="toc-level-2"><a href="#scaling-up-to-full-size-gpt2-model" class="toc-link" data-target="scaling-up-to-full-size-gpt2-model">Scaling up to full size GPT2 model</a></li>
+<li class="toc-level-3"><a href="#evaluating-gpt2-15b" class="toc-link" data-target="evaluating-gpt2-15b">Evaluating GPT2 1.5B</a></li>
+<li class="toc-level-2"><a href="#summary" class="toc-link" data-target="summary">Summary</a></li>
+<li class="toc-level-2"><a href="#footnotes" class="toc-link" data-target="footnotes">Footnotes</a></li>
+</ul>
+</nav>
+        </aside>
         
-        <div class="post-content">
-            <h1>Training GPT2 from 650 to 3 million tokens per second</h1>
-<p>In this post I want to share my journey scaling up the training throughput of GPT-2 124M from 650 tokens per second (TPS) on my laptop to training on a full node of 8xH100s at 3 million TPS, and then using this knowledge to replicate the original GPT2 paper by training a full size GPT2 1.5B parameter model on 10B tokens.</p>
+        <article class="post-main">
+            <header>
+                <h1>Training GPT2 from 650 to 3 million tokens per second</h1>
+                <p class="blog-post-date">Published on July 13, 2025</p>
+            </header>
+            
+            <div class="post-content">
+                <p>In this post I want to share my journey scaling up the training throughput of GPT-2 124M from 650 tokens per second (TPS) on my laptop to training on a full node of 8xH100s at 3 million TPS, and then using this knowledge to replicate the original GPT2 paper by training a full size GPT2 1.5B parameter model on 10B tokens.</p>
 <p>Note, this post is not a tutorial on how to implement and train a GPT2 model - there are many great resources on that topic already <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> - rather it is more of a research journal, where I layer on the various improvements out there for scaling up the training of transformer models and provide details (and graphs) on the impact these various changes have on training throughput. I expect it might interest anyone who is curios about questions like, "how much does using a H100 speed things up over my gaming GPU?", or "how big an impact do low-level algorithm improvements make in the training speed of LLMs"? If those kinds of questions tickle your fancy, then read on my friend.</p>
 <blockquote>
-<p>[!note]
-All code is available on on <a href="https://github.com/Jjschwartz/gollem">github</a></p>
+<p><strong>Note:</strong> All code is available on <a href="https://github.com/Jjschwartz/gollem">github</a></p>
 </blockquote>
-<h2>Why GPT2?</h2>
+<h2 id="why-gpt2">Why GPT2?</h2>
 <p>Why GPT2, it's kinda outdated isn't it? Well yes, but also the recipe for training LLMs has not changed that much since the GPT2. Furthermore, training GPT2 has a number of benefits. Firstly, there are a bunch of excellent tutorials covering implementing and training GPT2 <sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. Secondly, with sizes ranging from 124M to 1.5B it offers a nice progression from a size I can run on my laptop up to size that really starts benefitting from industrial grade GPUs designed for AI workloads. Thirdly, the amount of data used to train GPT2 1.5B is quite modest at around 40B tokens, which can fit on any reasonable size machine (compared to the 10s of trillions of tokens for more recent models). And finally, it's the OG model that really put scaling on the map.</p>
 <p>For those unfamiliar, here is a brief summary of GPT2 from one it's descendants, Claude: "GPT2 is an autoregressive transformer language model that predicts the next token based on previous context. It follows the standard transformer decoder architecture with multi-head attention mechanisms and feed-forward networks. While its architecture may seem simple by today's standards, the core components remain largely unchanged in modern LLMs." Thanks Claude.</p>
 <p>To be more precise, here are some technical specs for the different members of the GPT2 family:</p>
@@ -489,22 +793,24 @@ All code is available on on <a href="https://github.com/Jjschwartz/gollem">githu
 </tr>
 </tbody>
 </table>
-<h2>Training my first GPT2</h2>
+<h2 id="training-my-first-gpt2">Training my first GPT2</h2>
 <p>Before jump straight into train the largest GPT2 model on 40B tokens, it seems prudent to to make sure we can train a small model on a small dataset. So here we start with GPT-2 Small (124M) on the tiny Shakespeare dataset of around 300K tokens.</p>
 <p>For this run I wanted to see if we could get a relatively small language model to learn something (in this case shakespearian prose) under the base conditions.</p>
 <p>For methodology, I implemented GPT2 using python and pytorch primarily following some of Andrej Karpathy's tutorials (NanoGPT and llm.c). Then for the training setup:</p>
 <ul>
 <li><strong>Hardware:</strong> my Mac book M3 laptop using the CPU (i.e. <code>device=cpu</code> in torch)  </li>
-<li><strong>Hyperparameters:</strong></li>
+<li><strong>Hyperparameters:</strong><ul>
 <li>1000 iterations</li>
 <li>batch size = 1</li>
 <li>sequence length = 1024 (i.e. full sequence length)</li>
+</ul>
+</li>
 </ul>
 <p>That's it, no additional optimizations.</p>
 <p>So how did it go? Pretty well I think. Firstly the training loss went down:</p>
 <p><img alt="exp0_train_loss" src="../assets/blog/2025-07-13-scaling-gpt2/exp0_train_loss.png" /></p>
 <p>And comparing generations throughout training we can observe a clear improvement in legibility, although even after 1000 iterations it's still not amazing:</p>
-<pre class="codehilite"><code class="language-txt">&gt;&gt;&gt;Sample at step 0: 
+<pre><code class="language-txt">&gt;&gt;&gt;Sample at step 0: 
 ria courage163163163 Dougpsons impart harbour Snyderophonflation define HawTagTagMobileworks lust interested unintetermin Kremlin Latinos Ragefire Schemeの�cedovan arenas drains
 
 &gt;&gt;&gt;Sample at step 500: 
@@ -522,15 +828,13 @@ I haveABYORK:
 But then then, 
 Hath you do a father-cear of these to be gone to
 </code></pre>
-
 <p>Interestingly, we can see the model reproducing the "Character: text" pattern in the step 1000 output, albeit not perfectly. It also learns a liberal use of newlines, which tracks with the training data layout. With some selective prompting it's possible to get some somewhat coherent outputs. Here I prompted the model with the input "Romeo and Juliet":</p>
-<pre class="codehilite"><code class="language-txt">Romeo and Juliet 
+<pre><code class="language-txt">Romeo and Juliet 
 What fear! We are thou know me, my death. for thou woe, and so be but if thou shaltst never fly and talk Pray!&lt;|endoftext|&gt;
 </code></pre>
-
 <p>In total the model was trained on roughly 1M tokens (<code>1024 batch size * 1000 steps = 1024000</code>) with the model seeing each token in the dataset around 3 times. Overall it took around 26 min to train at an average of 645 tokens per second (TPS).</p>
 <p>So it took us 26 minutes to train a 124M parameter model on 1M tokens. Scaling this up to the full size GPT2 which has 1.5B parameters and is trained on 10B tokens (the paper is 40B but lets keep the math simple), we have a 1 OOM increase in model parameters and 4 OOM increase in data. Even if we keep the model size the same and just scale up the data, training GPT2 124M would take $26 \text{ minutes} \times 10^4 = 260,000 \text{ minutes}$ or around 180 days. If we additionally scaled up the model parameters, assuming a naive 1 OOM decrease in tokens per second, this balloons to 1800 days. Ain't nobody got time for that, and that's assuming a 1.5B parameter model can even fit in memory on my laptop while training.</p>
-<h2>Scoreboard with Baseline</h2>
+<h2 id="scoreboard-with-baseline">Scoreboard with Baseline</h2>
 <p>But before moving on, I'm going to introduce the scoreboard for tracking how training throughput changes as we layer on each improvement. Each row will be a new piece of hardware, software optimization, or some other change in our training setup. The "TPS" columns shows absolute throughput, while the "Speedup" column is the speedup over the baseline.</p>
 <table>
 <thead>
@@ -549,19 +853,19 @@ What fear! We are thou know me, my death. for thou woe, and so be but if thou sh
 </tbody>
 </table>
 <p>For now our scoreboard only has the baseline entry. Fortunately, there are a bunch of optimizations we can do, starting with probably the biggest: hardware!</p>
-<h2>Hardware juicing</h2>
+<h2 id="hardware-juicing">Hardware juicing</h2>
 <p>AI is a big deal and lots of smart people have invested a bunch of time improving hardware for AI training workloads. I am fortunate to have access to a few of these through my work's compute clusters, which my employer <a href="https://imbue.com/">Imbue</a> graciously allowed me to use for this project during times it was not in use.</p>
-<h3>MPS on M3</h3>
+<h3 id="mps-on-m3">MPS on M3</h3>
 <p>To start, I have a macbook with an M3 chip which aims to improved AI workloads. To make use of this the nice people at Apple created something they call <a href="https://developer.apple.com/metal/pytorch/">Metal Performance Shaders (MPS)</a> which from my understanding is a library of deep learning specific kernels for apple hardware like the M3 chip. This is similar to CUDA for Nvidia GPUs and the best part, using MPS is as simple as changing <code>device=cpu</code> to <code>device=mps</code> in your training code.</p>
 <p><strong>Results</strong>
 Training with MPS on the same laptop we get a 2x improvement in speed, going from 645 to <strong>1499 TPS</strong>, dropping the training time to around 12 min.</p>
-<h3>CUDA on Nvidia RTX 3090 GPU</h3>
+<h3 id="cuda-on-nvidia-rtx-3090-gpu">CUDA on Nvidia RTX 3090 GPU</h3>
 <p>Next I tried the same training setup using CUDA on an RTX 3090, a decent GPU but by no means top of the line when it comes to AI training workloads. This is a little more effort as it requires running my code on a different machine and dealing with properly installing Nvidia drivers and CUDA. But other than that nothing in my code needs to change apart from <code>device=cuda</code>.</p>
 <p><strong>Results</strong>
 Even with a GPU not targeted specifically for AI workloads, the speed up is huge, coming in at a whopping <strong>11381 TPS</strong>, on the order of 1 OOM speedup over training on a cpu and even MPS. This dropped the training time down to around 1.5 min for 1M tokens.</p>
-<h3>The big one, CUDA on Nvidia H100 GPU</h3>
+<h3 id="the-big-one-cuda-on-nvidia-h100-gpu">The big one, CUDA on Nvidia H100 GPU</h3>
 <p>Finally I tried the industry workhorse GPU for LLM training: the H100. As expected we see another big boost with TPS increasing up to <strong>27,026</strong> tokens, dropping the time to process 1M tokens down to 35-40 s. Now we are talking.</p>
-<h3>All together now</h3>
+<h3 id="all-together-now">All together now</h3>
 <p>Now we can do a side-by-side comparison of speed based on hardware. Firstly, let's look at the speedup in tokens per second with respect to using a <code>cpu</code>:</p>
 <p><img alt="gpt2_hardware_speedup_over_cpu" src="../assets/blog/2025-07-13-scaling-gpt2/gpt2_hardware_speedup_over_cpu.png" /></p>
 <p>Not unexpectedly we see over 1 OOM speedup when switching to using a GPU, with around a 42X speedup when using the H100 over the CPU baseline.</p>
@@ -572,7 +876,7 @@ Even with a GPU not targeted specifically for AI workloads, the speed up is huge
 <p>Very neat!</p>
 <p>So big GPU make training go fast. Nothing too surprising there, except maybe the ease of doing it (says the person who didn't have to install the GPUs in the data center).</p>
 <p>But even at 27K tokens per second, that would still require around 4 days to train a 124M param model on 10B tokens and around 40 days for a 1.5B param model (using our naive 1 OOM slowdown). Still far from desirable if we are to train something with 3-7B params on even more tokens. Fortunately there are still many optimizations we can make!</p>
-<h2>Scoreboard after hardware optimizations</h2>
+<h2 id="scoreboard-after-hardware-optimizations">Scoreboard after hardware optimizations</h2>
 <p>An here we have our scoreboard so far, after adding rows for each hardware setup we used.</p>
 <table>
 <thead>
@@ -605,7 +909,7 @@ Even with a GPU not targeted specifically for AI workloads, the speed up is huge
 </tr>
 </tbody>
 </table>
-<h2>Side quest: Model FLOP Utilization (MFU)</h2>
+<h2 id="side-quest-model-flop-utilization-mfu">Side quest: Model FLOP Utilization (MFU)</h2>
 <p>Before moving on to software optimizations, it would be good to have a way to measure how effectively we are using the hardware we have at our disposal.</p>
 <p>Model FLOP Utilization (MFU) is a widely used metric for measuring how efficiently your training setup is using the theoretical capacity of your hardware. It's also fairly simple to calculate:</p>
 <p>$$
@@ -618,13 +922,13 @@ Where:</p>
 <li>$P$ is the theoretical peak FLOPS of the hardware</li>
 </ul>
 <p>It's important to note that MFU aims to measure how much of your hardware's capacity is being used for computation that is <em>required</em> for training a model. Specifically, the forward and backward computations. It's possible that your MFU is 50% but you are actually using 80% of the hardwares capacity, but the extra 30% is going towards computations that are not fundamentally required for model training. The main example of this is rematerialization computations if you are using activation checkpointing.</p>
-<h3>Calculating MFU</h3>
+<h3 id="calculating-mfu">Calculating MFU</h3>
 <p>Actually calculating MFU is fairly straight forward since it involves only 3 terms: <code>C</code>, <code>D</code>, <code>P</code>. Let's go over how to determine the value of each, starting with <code>D</code> and <code>P</code> first since these are the easiest.</p>
 <p><code>D</code> is the tokens per second observed during training, which is just <code>batch_size / time_per_batch</code>. Of course you want to be careful about taking some kind of average to smooth out any spikes, but that's it.</p>
 <p><code>P</code> is the theoretical peak FLOPs of the hardware, which you just have to look up from the vendor. For NVIDIA GPUs it seems the best strategy it to just google <code>nvidia datasheet &lt;gpu name&gt;</code>.</p>
 <p><code>C</code> is a bit more involved as it required calculating how many FLOPs each forward and backward pass of our model uses. Adam Casson has an excellent blog post <a href="https://www.adamcasson.com/posts/transformer-flops">transformer flops</a> covering this, and the various ways people estimate it. But the TL;DR is to go through your model architecture and sum up all the matrix multiplications involved and their sizes for a forward pass, then multiple that by 3 (one forward + 2 for backwards) since the backwards pass requires 2 times the FLOPs of the forward pass.</p>
 <p>Alternatively, if you know the number of parameters your model has, a common estimate is $C \approx 6N$ where <code>N</code> is the number of non-embedding parameters in the model.</p>
-<h3>MFU for GPT2 124M</h3>
+<h3 id="mfu-for-gpt2-124m">MFU for GPT2 124M</h3>
 <p>Now that we know about MFU, let's calculate it for the training runs we did using GPT2 124M. We will only focus on the GPUs since it's easy to get the theoretical numbers from official specs (<a href="https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622">RTX 3090</a>, <a href="https://resources.nvidia.com/en-us-hopper-architecture/nvidia-tensor-core-gpu-datasheet">H100</a>) and the H100 GPU is also what we'll be using moving forward.</p>
 <p>For the training setup above, with GPT2 124M using <code>float32</code>, we get the following:</p>
 <p><strong>model FLOPs (C)</strong> = 854,438,400</p>
@@ -660,7 +964,7 @@ Where:</p>
 </ul>
 <p>So 34% is in the ballpark but still a bit low. However, the reported numbers are for training really big models across a whole cluster of distributed machines. So we should expect we can do as good if not better than these MFUs on a single GPU. Also, 34% is the MFU when using <code>float32</code>, while modern AI GPUs like the H100 are optimized for computations in lower precision like <code>float16/bfloat16</code>. Indeed the capacity of the H100 at <code>float32</code> is 67 TFLOPS, while for <code>float16/bfloat16</code> it's 989 TFLOPs, over 1 OOM more!. So while we are at 34% when using <code>float32</code>, we are only at 2.33% MFU for the <code>float16/bfloat16</code> limit, so we are actually very far from hitting the limits of what the H100 can do for AI workloads. Let's see if we can do better!</p>
 <p>So let's do it!</p>
-<h2>Software optimizations: getting all the juice</h2>
+<h2 id="software-optimizations-getting-all-the-juice">Software optimizations: getting all the juice</h2>
 <p>There are a bunch of software optimizations we can make, most of which are very easy to apply in PyTorch. So let's try applying each one in sequence and see how we go.</p>
 <p>There are two important types of optimizations I will explore:</p>
 <ol>
@@ -668,7 +972,7 @@ Where:</p>
 <li>increasing the batch size</li>
 </ol>
 <p>I'm going to tackle these in sequence, starting with the tweaks to the algorithms used since these also affect memory usage which changes what batch size we can use. So we will make the algorithmic improvements then see how changing the batch size affects throughput when applied on top of these improvements.</p>
-<h3>Algorithmic improvements</h3>
+<h3 id="algorithmic-improvements">Algorithmic improvements</h3>
 <p>Some details on the setup for the following experiments:</p>
 <ol>
 <li>Using H100</li>
@@ -682,21 +986,20 @@ Where:</p>
 <li>Peak mem usage: 4371 MiB</li>
 </ul>
 <p>Here we include the peak GPU memory usage measured during the run. This is useful for seeing how each optimization affects GPU memory usage which will become an important factor once we look at scaling up to the full size GPT2 model and beyond.</p>
-<h4>Using <code>bfloat16</code></h4>
+<h4 id="usingbfloat16">Using <code>bfloat16</code></h4>
 <p>The first optimization is to switch to using <code>bfloat16</code>, which is a simple one to implement using the <code>torch.autocast</code> context manager, something like the following:</p>
-<pre class="codehilite"><code class="language-python">model = GPT2(...)
+<pre><code class="language-python">model = GPT2(...)
 
 amp_ctx = torch.autocast(device_type=&quot;cuda&quot;, dtype=torch.bfloat16)
 
 for step in range(num_steps):
- x, y = dataset.next_batch()
- with amp_ctx:
-  y_hat = model(x)
-  loss = loss_fn(y, y_hat)
- loss.backwards()
- optimizer.step()
+    x, y = dataset.next_batch()
+    with amp_ctx:
+        y_hat = model(x)
+        loss = loss_fn(y, y_hat)
+    loss.backwards()
+    optimizer.step()
 </code></pre>
-
 <p>The important thing is to use the <code>torch.autocast</code> context during the model forward pass, which takes care of using the correct data type (i.e. <code>bfloat16</code> or <code>float32</code>) depending on the operation being performed. This includes casting from <code>float32</code> inputs to <code>bfloat16</code> for operations and back again.</p>
 <p><strong>Results:</strong> using <code>bfloat16</code> leads to:</p>
 <ul>
@@ -705,9 +1008,9 @@ for step in range(num_steps):
 <li>Speedup: 1.59X</li>
 <li>Peak mem usage: 3514 MiB (0.8X baseline)</li>
 </ul>
-<h4>Using Flash Attention</h4>
+<h4 id="using-flash-attention">Using Flash Attention</h4>
 <p>Attention is a notoriously expensive operation in transformers, primarily due to it being quadratic in sequence length, i.e. $O(N^2)$ for sequence length $N$. Fortunately, there have been a number of low level optimizations around making attention faster and less memory intensive. The most widely used optimized attention implementation is Flash Attention (<a href="https://arxiv.org/abs/2205.14135">paper</a>, <a href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html">pytorch</a>). The details of flash attention are fairly involved, and somewhat beyond me without spending a bunch more time studying it. Thankfully, using it in practice is easy. Simply swap your existing code for computing attention with pytorch's <code>scaled_dot_product_attention</code> function:</p>
-<pre class="codehilite"><code class="language-python"># old code
+<pre><code class="language-python"># old code
 attn_scores = q @ k.transpose(-2, -1)
 attn_scores = attn_scores / math.sqrt(self.d_head)
 attn_scores = attn_scores + mask
@@ -717,7 +1020,6 @@ z = attn @ v
 # code with flash attention
 z = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 </code></pre>
-
 <p><strong>Results:</strong> using flash attention (on top of using <code>bfloat16</code>) leads to:</p>
 <ul>
 <li>TPS: 48154</li>
@@ -726,13 +1028,12 @@ z = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 <li>Peak mem usage: 2655 MiB (0.6X baseline)</li>
 </ul>
 <p>The speed up is not as big as switching from <code>float32</code> to <code>bfloat32</code> but still very good all things considered. Another big thing to notice is that we also see a significant drop in memory usage, which is a big advantage of flash attention especially as you start increasing the model context length.</p>
-<h4><code>torch.compile</code></h4>
+<h4 id="torchcompile"><code>torch.compile</code></h4>
 <p>Next up is using <a href="https://pytorch.org/tutorials/intermediate/torch_compile_tutorial.html"><code>torch.compile</code></a> which is a relatively new addition to pytorch, added in version 2.0. As per the docs: "<code>torch.compile</code> makes PyTorch code run faster by JIT-compiling PyTorch code into optimized kernels, all while requiring minimal code changes."</p>
 <p>This sounds perfect for our needs. In terms of code changes it's as simple as:</p>
-<pre class="codehilite"><code class="language-python">model = GPT2(...)
+<pre><code class="language-python">model = GPT2(...)
 model = torch.compile(model)
 </code></pre>
-
 <p>This will return a new "compiled" version of the model, which for the most part is a stand-in replacement for the underlying model. There are some additional details that need to be kept in mind when saving the model, since you generally want to save the underlying model not the compiled model. But other than that its a simple one-line change.</p>
 <p><strong>Results:</strong> using <code>torch.compile</code> (on top of previous optimizations) leads to:</p>
 <ul>
@@ -742,7 +1043,7 @@ model = torch.compile(model)
 <li>Peak mem usage: 2448 MiB (0.56X baseline)</li>
 </ul>
 <p>Another solid improvement in speed, and minor memory improvement. Yay!</p>
-<h4>Using <code>fused_adamw</code></h4>
+<h4 id="usingfusedadamw">Using <code>fused_adamw</code></h4>
 <p>Flash attention is an example of using low level hardware specific optimizations to improve the speed and memory usage of an important part of transformer training workloads. But there is nothing stopping similar improvements being made in other areas of the workload. In this case we apply an optimization to improve the optimizer <code>AdamW</code> used for updating the model weights during backprop. The specific optimization is to introduce the use of fused operations which "fuse" what were multiple distinct steps into a single GPU kernel operation.</p>
 <p>For example, consider a model with 3 parameters <code>(p1, p2, p3)</code> and the AdamW update which normally involves the following steps being performed for each parameter:</p>
 <ol>
@@ -752,7 +1053,7 @@ model = torch.compile(model)
 <li>Update parameter with weight decay</li>
 </ol>
 <p><strong>Without fusion (standard implementation)</strong>:</p>
-<pre class="codehilite"><code class="language-python"># For each parameter (3 separate loops)
+<pre><code class="language-python"># For each parameter (3 separate loops)
 for p in [p1, p2, p3]:
     # These steps are executed sequentially with separate kernel launches in the GPU for each step
     m = beta1 * m + (1-beta1) * grad  # First moment 
@@ -761,9 +1062,8 @@ for p in [p1, p2, p3]:
     v_corrected = v / (1 - beta2^t)  # Bias correction
     p = p - lr * (m_corrected / (sqrt(v_corrected) + eps) + weight_decay * p)  # Update
 </code></pre>
-
 <p><strong>With horizontal fusion (foreach implementation)</strong>: here we operate on all parameters in parallel</p>
-<pre class="codehilite"><code class="language-python"># Process all parameters in a single operation
+<pre><code class="language-python"># Process all parameters in a single operation
 all_m = [m1, m2, m3]      # current first moments
 all_v = [v1, v2, v3]      # current second moments
 all_grads = [grad1, grad2, grad3]    # computed gradients
@@ -774,12 +1074,10 @@ all_m = [beta1 * m + (1-beta1) * g for m, g in zip(all_m, all_grads)]
 all_v = [beta2 * v + (1-beta2) * g² for v, g in zip(all_v, all_grads)]
 # Continue with bias correction and updates for all parameters at once
 </code></pre>
-
 <p><strong>With both horizontal and vertical fusion (fused implementation)</strong>: perform each operation in a single GPU kernel on all parameters in parallel</p>
-<pre class="codehilite"><code class="language-python"># Single kernel launch that processes all parameters and all operations together
+<pre><code class="language-python"># Single kernel launch that processes all parameters and all operations together
 fused_adamw_kernel(all_params, all_grads, all_m, all_v, lr, beta1, beta2, eps, weight_decay)
 </code></pre>
-
 <p>This type of fusion can improve speed by making better use of the parallel capacity of a given GPU and by also reducing the number of separate kernel loads, which typically come with a bunch of overhead.</p>
 <p><strong>Results:</strong> using <code>fused Adamw</code> (on top of previous optimizations) leads to:</p>
 <ul>
@@ -789,13 +1087,12 @@ fused_adamw_kernel(all_params, all_grads, all_m, all_v, lr, beta1, beta2, eps, w
 <li>Peak mem usage: 2463 MiB (0.56X baseline)</li>
 </ul>
 <p>Another big improvement in terms of speed!</p>
-<h4>Enabling Tensorcores</h4>
+<h4 id="enabling-tensorcores">Enabling Tensorcores</h4>
 <p>Tensorcores are one of the big architectural improvements of modern AI specialized GPUs like the H100. They are essentially, in the words of claude, matrix multiplication accelerators that can perform mixed-precision operations with significantly higher throughput than standard CUDA cores. Like the previous optimizations, making use of tensorcores is simple, just set pytorch float32 precision to use the <code>TensorFloat32</code> (<code>tfloat32</code>) data type:</p>
-<pre class="codehilite"><code class="language-python"># set the torch precision mode to use TensorFloat32 (TF32) for matmuls
+<pre><code class="language-python"># set the torch precision mode to use TensorFloat32 (TF32) for matmuls
 # docs https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html
 torch.set_float32_matmul_precision(&quot;high&quot;)
 </code></pre>
-
 <p>Under the hood, this will improve the throughput of floating point operations at the cost of reduced precision.</p>
 <p><strong>Results:</strong> using <code>fused Adamw</code> (on top of previous optimizations) leads to:</p>
 <ul>
@@ -832,17 +1129,17 @@ torch.set_float32_matmul_precision(&quot;high&quot;)
 </tbody>
 </table>
 <p>We see that these are roughly equivalent, and adding <code>tfloat32</code> on top of <code>bfloat16</code> makes no meaningful difference. It is interesting that <code>tfloat32</code> by itself is a little faster than using <code>bfloat16</code>. I'm not 100% sure why this is, but if I was to hazard a guess it would be due to greater overhead casting from <code>float32</code> to <code>bfloat16</code> and back, than for <code>tfloat32</code>, but I'm really not sure. It'd be interesting to see if this still holds for larger batch sizes and models since the theoretical throughput of the H100 for <code>bfloat16</code> is twice that of <code>tfloat32</code>.</p>
-<h4>All together</h4>
+<h4 id="all-together">All together</h4>
 <p>So let's compare all of these optimizations side-by-side. Below is a plot of the effect of each algorithmic improvements on different performance metrics. Overall we get ~3x speedup in tokens per second via these relatively simple optimizations, from 27K to almost 80K. We also get a decent drop in memory usage, though we will have to wait and see how this translates to larger models and batch sizes.</p>
 <p>Important to note is that even after this 3x improvement in TPS, our MFU@<code>bfloat16</code> is still less than 7%! So we are leaving a lot on the table in terms of the capacity of our GPU. Fortunately, we still have a tool left in our toolbox.</p>
 <p><img alt="gpt2_software_optimization_algorithmic" src="../assets/blog/2025-07-13-scaling-gpt2/gpt2_software_optimization_algorithmic.png" /></p>
-<h3>Tuning the batch size</h3>
+<h3 id="tuning-the-batch-size">Tuning the batch size</h3>
 <p>So far all our testing and experiments have been done with a batch size of 1024 tokens, or more specifically a single sequence of 1024 tokens (i.e. the context size of GPT2). GPUs excel at parallel computation, and in general we can expect to see an improvement in throughput as the batch size (and thus the matrix multiplication size) increases up to some threshold or memory limit. So let's increase the batch size by doubling the number of sequences until we run out of memory.</p>
 <p>Here are the results (noting the x-axis is log 2 scale):</p>
 <p><img alt="gpt2_software_optimization_batch_size" src="../assets/blog/2025-07-13-scaling-gpt2/gpt2_software_optimization_batch_size.png" /></p>
 <p>With my setup running on a single H100, I largest power of 2 batch size before the GPU ran out of memory was of 65K tokens (65 sequences of 1024 tokens). Interestingly, the peak memory usage was around 35 GiB for a batch size of 65K, which is much less than the 80 GiB limit of a H100. However, I don't think the 35 GiB accounts for some additional overhead usage, and we also see a more than linear increase in memory usage with batch size.  This can be explained by the $O(N^2)$ memory requirements of computing the attention scores, although I would need to investigate this further since flash attention generally mitigates some of this. I might also be able to squeeze more performance by testing batch sizes between 65K and 131K that are not powers of 2, but I wanted to keep things simple.</p>
 <p>Importantly, we see a huge increase in throughput from increasing the batch size, hitting close to <strong>350K TPS</strong> for the largest batch size, which is around a 13X speedup over the base setup (no optimizations + batch size of 1024 tokens) on a H100. We also see that MFU has also improved to around 30% for the largest batch size. Though, my expectation was that this would be higher, so I'm left wondering if there is even more we can do to improve efficiency here.</p>
-<h2>Scoreboard after software optimizations</h2>
+<h2 id="scoreboard-after-software-optimizations">Scoreboard after software optimizations</h2>
 <p>So to review, after applying algorithmic optimizations and tuning the batch size we were able to improve throughput when running on a H100 GPU from 27K TPS up to a much better 350K TPS. This is ~13X or 1 OOM speedup!. Compare this to where we started, running at a measly 645 TPS on my laptop CPU, so far we've managed a whopping 542X speedup, around $\log_{10}(542) = 2.73$ OOM!</p>
 <table>
 <thead>
@@ -907,7 +1204,7 @@ torch.set_float32_matmul_precision(&quot;high&quot;)
 </table>
 <p>So how does this look for training our 1.5B model? At 350K TPS it would take around 8 hours to train GPT2 124M on 10B tokens, or around 3.33 days to train a 1.5B param model (using our naive 1 OOM slowdown).</p>
 <p>So with all these optimization we are looking at a reasonable training time for a small but non-trivial sized model. But so far we have still only been using a single GPU, while frontier model labs use clusters of thousands. So how much better can we do if we scale up to a full node of 8 H100's?</p>
-<h2>Getting parallel: DDP</h2>
+<h2 id="getting-parallel-ddp">Getting parallel: DDP</h2>
 <p>Perhaps the simplest way to parallelize training of LLMs is through <strong>Distributed Data Parallel</strong> (DDP), where the model and optimizer is mirrored across multiple GPUs while each GPU processes a different slice of the current batch of data. This parallelization across the data dimension is why this strategy is referred to as <strong>Data parallel</strong>.</p>
 <p>The high-level flow per training step of DDP is as follows. Starting from identical model and optimizer states across N GPUs:</p>
 <ol>
@@ -923,7 +1220,7 @@ let's look at the throughput and MFU as we scale the number of GPUs to 1, 2, 4, 
 <p>First thing to notice is we get linear speedup in the throughput which is exactly what we want! We also see a small, but significant drop in MFU (from 36% to 33%) as we scale the number of GPUs which is expected due to additional communication overhead introduced when running distributed training.</p>
 <p>As a sanity check to make sure we are still getting the same model performance when scaling to multi-GPUs here is the training loss curves by step and by time across training runs with different number of GPUs. We see we get basically identical loss curves even when using different number of GPUs, which is what we should expect.</p>
 <p><img alt="6_gpt2_124M_training_loss_vs_num_gpus_by_step" src="../assets/blog/2025-07-13-scaling-gpt2/6_gpt2_124M_training_loss_vs_num_gpus_by_step.png" /> <img alt="6_gpt2_124M_training_loss_vs_num_gpus_by_time" src="../assets/blog/2025-07-13-scaling-gpt2/6_gpt2_124M_training_loss_vs_num_gpus_by_time.png" /></p>
-<h2>Scoreboard after Distributed Training</h2>
+<h2 id="scoreboard-after-distributed-training">Scoreboard after Distributed Training</h2>
 <p>Reviewing our journey a little bit, we started with 645 TPS on my laptop CPU, and we are now at 3M TPS on a single node of 8 H100s. This is a 4,723x or $\log_{10}(4651) = 3.67$ OOM speedup and takes the time to train GPT2 124M on 10B tokens from 180 days down to 55 min!. Also recall that on a single GPU with all the optimizations it was going to take around 8 hours for the same training run, here we get a clean 8X speedup.</p>
 <table>
 <thead>
@@ -991,14 +1288,14 @@ let's look at the throughput and MFU as we scale the number of GPUs to 1, 2, 4, 
 </tr>
 </tbody>
 </table>
-<h2>Training GPT2 124 M on 10B tokens</h2>
+<h2 id="training-gpt2-124-m-on-10b-tokens">Training GPT2 124 M on 10B tokens</h2>
 <p>Ok now that we have spent all this time optimizing our training setup let's do a full training run of 10B tokens with GPT2 124M.</p>
 <p>As per our earlier experiments we see a pretty consistent 3M TPS across the 10B tokens training set. The total training time was ~60 min, about 5 min more than predicted, though this run also includes periodic validation:</p>
 <p><img alt="7_gpt2_124M_10B_tps" src="../assets/blog/2025-07-13-scaling-gpt2/7_gpt2_124M_10B_tps.png" /></p>
 <p>And here is a very satisfying learning curve:</p>
 <p><img alt="7_gpt2_124m_fineweb_edu_10B_by_step" src="../assets/blog/2025-07-13-scaling-gpt2/7_gpt2_124m_fineweb_edu_10B_by_step.png" /></p>
 <p>We observe a smooth drop in loss, which is very promising.</p>
-<h3>Hellaswag Benchmark</h3>
+<h3 id="hellaswag-benchmark">Hellaswag Benchmark</h3>
 <p>Testing our trained model on the hellaswag benchmark, we get comparable results Karpathy's llm.c. We can also see an appreciable increase from the same model trained on 10x less data on the tinystories dataset.</p>
 <table>
 <thead>
@@ -1031,7 +1328,7 @@ let's look at the throughput and MFU as we scale the number of GPUs to 1, 2, 4, 
 </tbody>
 </table>
 <p>Very validating :)</p>
-<h2>Scaling up to full size GPT2 model</h2>
+<h2 id="scaling-up-to-full-size-gpt2-model">Scaling up to full size GPT2 model</h2>
 <p>Ok at this point we have successfully trained GPT2 124M on 10B tokens. The next step is to scale up to the full size model: GPT2 1.5B. Fortunately, since we are training on H100s which have 80GB of memory which can fit the full model with room to spare, switching to training GPT 1.5B is a simple as tweaking some hyperparameters and adjusting the batch size.</p>
 <p>In my case I found I was able to use a batch size of 16 sequences of 1024 tokens, so total of around 16K tokens per GPU. The GPT2 paper uses a total batch size of around 1M tokens. This means that since we can handle a max of 16K tokens X 8 GPUs = 128K tokens per step, we need to use 8 gradient accumulation steps to hit the total batch size, which is no big deal.</p>
 <p>So how did it go? Well here we have the training loss of the 1.5B compared to the 124M models trained on the same dataset. Recall that the batch size was 524K and 1M  for the 124M and 1.5B models, respectively, hence why there are twice as many training steps for the 124M model.</p>
@@ -1040,7 +1337,7 @@ let's look at the throughput and MFU as we scale the number of GPUs to 1, 2, 4, 
 <p>The first thing you'll probably notice is a significant drop in the final loss. We get a big boost in performance simply by scaling up the model size, keeping everything else the same. For me this gave me a visceral sense of the scaling laws in action.</p>
 <p>Of course training with a larger model comes at a cost. With the 10X increase in model parameters we saw a roughly 10X drop in TPS, with around 320K TPS across the 8 H100s. Interestingly, this corresponds to around 41.94% MFU most likely due to the higher arithmetic intensity (i.e. bigger matrix multiplications) which comes with larger layers. Total training time was 582 min, which again is very close to 10X the time it took to train the 124M model (59.5 min).</p>
 <p><img alt="7_gpt2_1_5B_fineweb_edu_tps_by_time" src="../assets/blog/2025-07-13-scaling-gpt2/7_gpt2_1_5B_fineweb_edu_tps_by_time.png" /></p>
-<h3>Evaluating GPT2 1.5B</h3>
+<h3 id="evaluating-gpt2-15b">Evaluating GPT2 1.5B</h3>
 <p>So how was does final model compare?</p>
 <p>Below are the results of running the hellaswag evaluation. There is a noticeable increase in accuracy of around 6% between GPT2 124M to GPT2 1.5B, which is very satisfying to see. It is worth noting though that these results are far from SOTA with the hellaswag benchmark being essentially solved by more modern models that get 95% or more.</p>
 <table>
@@ -1087,22 +1384,18 @@ let's look at the throughput and MFU as we scale the number of GPUs to 1, 2, 4, 
 </table>
 <p><strong>Note</strong>: gpt2 124M used batch size of 500K, while gpt2 1.5B used batch size of 1M.</p>
 <p><strong>Note:</strong> The <code>gpt2 1.5B llm.c</code> result I am assuming used 32B steps based on the train script in the <code>llm.c</code> directory which trains for 32K steps on the <code>fineweb edu 100B</code> dataset (at 1M tokens per step)</p>
-<h2>Summary</h2>
+<h2 id="summary">Summary</h2>
 <p>The goal of this project for me was to train a non-trivial size transformer, specifically GPT2 1.5B, from scratch. Prior to starting this project I would consider myself fairly familiar with deep learning, transformers, and LLMs, at least from an understanding point of view. However, I'd never properly trained anything that would be considered an LLM.</p>
 <p>Overall I really enjoyed the challenge and it was fun seeing the numbers (TPS, MFU, accuracy) go up. Though perhaps beyond just the technical learnings, the biggest takeaway for me was the visceral sensation of how we can get intelligence by just taking the same thing and making it bigger, and how this has been largely driven by better hardware. It definitely gave me a deeper appreciation? perspective? on scaling as a path to intelligence.</p>
 <p>As a final graph, here is a bit of summary of where we started and where we ended up in terms of increasing the speed at which we could train models. The rows of the graph are in order of the optimizations we applied, starting from training using my laptop CPU all the way up to training across 8 H100s using DDP:</p>
 <p><img alt="8_summary" src="../assets/blog/2025-07-13-scaling-gpt2/8_summary.png" /></p>
 <hr />
-<h2>Footnotes</h2>
-<ul>
-<li><a href="https://github.com/karpathy/llm.c/tree/master">Karpathy's llm.c</a> and related <a href="https://github.com/karpathy/nanoGPT">nano gpt</a> <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">youtube vid</a>. A lot of my implementation was heavily based on the python implementation in <code>llm.c</code> in particular, including the various software optimizations I tried.</li>
-<li>Neel Nanda's transformer tutorials <a href="https://www.youtube.com/watch?v=bOYE6E8JrtU">part 1</a> <a href="https://www.youtube.com/watch?v=dsjUDacBw8o">part2</a>. A more mechanistic interpretability flavored implementation, goes into more detail than Karpathy's tutorials.</li>
-</ul>
+<h2 id="footnotes">Footnotes</h2>
 <div class="footnote">
 <hr />
 <ol>
 <li id="fn:1">
-<p>Here are my favorite tutorials and resources when it comes to implementing GPT2.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Here are my favorite tutorials and resources when it comes to implementing GPT2: <a href="https://github.com/karpathy/llm.c/tree/master">Karpathy's llm.c</a>, <a href="https://github.com/karpathy/nanoGPT">nano gpt</a>, and <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">youtube vid</a>. A lot of my implementation was heavily based on the python implementation in <code>llm.c</code> in particular, including the various software optimizations I tried. Neel Nanda's transformer tutorials <a href="https://www.youtube.com/watch?v=bOYE6E8JrtU">part 1</a> <a href="https://www.youtube.com/watch?v=dsjUDacBw8o">part2</a>. A more mechanistic interpretability flavored implementation, but goes into more detail than Karpathy's tutorials.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:2">
 <p><a href="https://arxiv.org/abs/2204.02311">PaLM paper</a>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
@@ -1115,8 +1408,9 @@ let's look at the throughput and MFU as we scale the number of GPUs to 1, 2, 4, 
 </li>
 </ol>
 </div>
-        </div>
-    </article>
+            </div>
+        </article>
+    </div>
 </main>
 
 <footer>

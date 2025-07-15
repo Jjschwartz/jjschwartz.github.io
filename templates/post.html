@@ -14,16 +14,22 @@
 </nav>
 
 <main class="container">
-    <article>
-        <header>
-            <h1>{{ title }}</h1>
-            <p class="blog-post-date">Published on {{ date }}</p>
-        </header>
+    <div class="post-layout">
+        <aside class="toc-sidebar">
+            {{ toc }}
+        </aside>
         
-        <div class="post-content">
-            {{ content }}
-        </div>
-    </article>
+        <article class="post-main">
+            <header>
+                <h1>{{ title }}</h1>
+                <p class="blog-post-date">Published on {{ date }}</p>
+            </header>
+            
+            <div class="post-content">
+                {{ content }}
+            </div>
+        </article>
+    </div>
 </main>
 
 <footer>

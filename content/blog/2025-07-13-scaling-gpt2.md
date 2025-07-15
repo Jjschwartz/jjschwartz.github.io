@@ -2,14 +2,11 @@
 title: Training GPT2 from 650 to 3 million tokens per second
 ---
 
-# Training GPT2 from 650 to 3 million tokens per second
-
 In this post I want to share my journey scaling up the training throughput of GPT-2 124M from 650 tokens per second (TPS) on my laptop to training on a full node of 8xH100s at 3 million TPS, and then using this knowledge to replicate the original GPT2 paper by training a full size GPT2 1.5B parameter model on 10B tokens.
 
 Note, this post is not a tutorial on how to implement and train a GPT2 model - there are many great resources on that topic already [^1] - rather it is more of a research journal, where I layer on the various improvements out there for scaling up the training of transformer models and provide details (and graphs) on the impact these various changes have on training throughput. I expect it might interest anyone who is curios about questions like, "how much does using a H100 speed things up over my gaming GPU?", or "how big an impact do low-level algorithm improvements make in the training speed of LLMs"? If those kinds of questions tickle your fancy, then read on my friend.
 
-> [!note]
-> All code is available on on [github](https://github.com/Jjschwartz/gollem)
+> **Note:** All code is available on [github](https://github.com/Jjschwartz/gollem)
 
 ## Why GPT2?
 
@@ -36,9 +33,9 @@ For methodology, I implemented GPT2 using python and pytorch primarily following
 
 - **Hardware:** my Mac book M3 laptop using the CPU (i.e. `device=cpu` in torch)  
 - **Hyperparameters:**
-  - 1000 iterations
-  - batch size = 1
-  - sequence length = 1024 (i.e. full sequence length)
+    - 1000 iterations
+    - batch size = 1
+    - sequence length = 1024 (i.e. full sequence length)
 
 That's it, no additional optimizations.
 
@@ -233,12 +230,12 @@ model = GPT2(...)
 amp_ctx = torch.autocast(device_type="cuda", dtype=torch.bfloat16)
 
 for step in range(num_steps):
- x, y = dataset.next_batch()
- with amp_ctx:
-  y_hat = model(x)
-  loss = loss_fn(y, y_hat)
- loss.backwards()
- optimizer.step()
+    x, y = dataset.next_batch()
+    with amp_ctx:
+        y_hat = model(x)
+  		loss = loss_fn(y, y_hat)
+ 	loss.backwards()
+ 	optimizer.step()
 ```
 
 The important thing is to use the `torch.autocast` context during the model forward pass, which takes care of using the correct data type (i.e. `bfloat16` or `float32`) depending on the operation being performed. This includes casting from `float32` inputs to `bfloat16` for operations and back again.
@@ -541,10 +538,7 @@ As a final graph, here is a bit of summary of where we started and where we ende
 
 ## Footnotes
 
-[^1]: Here are my favorite tutorials and resources when it comes to implementing GPT2.
-
-- [Karpathy's llm.c](https://github.com/karpathy/llm.c/tree/master) and related [nano gpt](https://github.com/karpathy/nanoGPT) [youtube vid](https://www.youtube.com/watch?v=kCc8FmEb1nY). A lot of my implementation was heavily based on the python implementation in `llm.c` in particular, including the various software optimizations I tried.
-- Neel Nanda's transformer tutorials [part 1](https://www.youtube.com/watch?v=bOYE6E8JrtU) [part2](https://www.youtube.com/watch?v=dsjUDacBw8o). A more mechanistic interpretability flavored implementation, goes into more detail than Karpathy's tutorials.
+[^1]: Here are my favorite tutorials and resources when it comes to implementing GPT2: [Karpathy's llm.c](https://github.com/karpathy/llm.c/tree/master), [nano gpt](https://github.com/karpathy/nanoGPT), and [youtube vid](https://www.youtube.com/watch?v=kCc8FmEb1nY). A lot of my implementation was heavily based on the python implementation in `llm.c` in particular, including the various software optimizations I tried. Neel Nanda's transformer tutorials [part 1](https://www.youtube.com/watch?v=bOYE6E8JrtU) [part2](https://www.youtube.com/watch?v=dsjUDacBw8o). A more mechanistic interpretability flavored implementation, but goes into more detail than Karpathy's tutorials.
 
 [^2]: [PaLM paper](https://arxiv.org/abs/2204.02311)
 

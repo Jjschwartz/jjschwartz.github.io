@@ -13,11 +13,60 @@ from pathlib import Path
 import re
 import shutil
 import traceback
+from html.parser import HTMLParser
 
 import markdown
 import yaml
 
 from db import MY_NAME, PAPERS, PROJECTS
+
+
+class TOCExtractor(HTMLParser):
+    """Extract headings from HTML to generate table of contents"""
+    
+    def __init__(self):
+        super().__init__()
+        self.headings = []
+        self.current_heading = None
+        self.capture_text = False
+        
+    def handle_starttag(self, tag, attrs):
+        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            # Extract id from attributes if present
+            heading_id = None
+            for attr_name, attr_value in attrs:
+                if attr_name == 'id':
+                    heading_id = attr_value
+                    break
+            
+            self.current_heading = {
+                'level': int(tag[1]),
+                'tag': tag,
+                'id': heading_id,
+                'text': ''
+            }
+            self.capture_text = True
+    
+    def handle_endtag(self, tag):
+        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] and self.current_heading:
+            # Generate id if not present
+            if not self.current_heading['id']:
+                self.current_heading['id'] = self.generate_id(self.current_heading['text'])
+            
+            self.headings.append(self.current_heading)
+            self.current_heading = None
+            self.capture_text = False
+    
+    def handle_data(self, data):
+        if self.capture_text and self.current_heading:
+            self.current_heading['text'] += data.strip()
+    
+    def generate_id(self, text):
+        """Generate a URL-friendly id from heading text"""
+        # Convert to lowercase, replace spaces with hyphens, remove special chars
+        id_text = re.sub(r'[^a-zA-Z0-9\s-]', '', text.lower())
+        id_text = re.sub(r'\s+', '-', id_text)
+        return id_text.strip('-')
 
 
 class SiteBuilder:
@@ -66,6 +115,33 @@ class SiteBuilder:
 
         with open(template_path, "r", encoding="utf-8") as f:
             return f.read()
+
+    def generate_toc_html(self, headings):
+        """Generate HTML for table of contents"""
+        if not headings:
+            return ""
+        
+        html = '<nav class="toc">\n<h3>Contents</h3>\n<ul class="toc-list">\n'
+        
+        for heading in headings:
+            indent_class = f"toc-level-{heading['level']}"
+            html += f'<li class="{indent_class}">'
+            html += f'<a href="#{heading["id"]}" class="toc-link" data-target="{heading["id"]}">'
+            html += f'{heading["text"]}</a></li>\n'
+        
+        html += '</ul>\n</nav>'
+        return html
+
+    def add_heading_ids(self, html_content, headings):
+        """Add id attributes to headings in HTML content"""
+        for heading in headings:
+            if heading['id']:
+                # Find the heading and add id attribute
+                pattern = f'<{heading["tag"]}>'
+                replacement = f'<{heading["tag"]} id="{heading["id"]}">'
+                html_content = html_content.replace(pattern, replacement, 1)
+        
+        return html_content
 
     def parse_blog_post(self, file_path):
         """Parse a Markdown blog post file and extract metadata"""
@@ -133,9 +209,20 @@ class SiteBuilder:
 
                 # Convert markdown to HTML
                 md = markdown.Markdown(
-                    extensions=["codehilite", "tables", "fenced_code", "footnotes"]
+                    extensions=["tables", "fenced_code", "footnotes"]
                 )
                 post_html = md.convert(post["content"])
+
+                # Extract headings for TOC
+                toc_extractor = TOCExtractor()
+                toc_extractor.feed(post_html)
+                headings = toc_extractor.headings
+
+                # Add id attributes to headings
+                post_html = self.add_heading_ids(post_html, headings)
+
+                # Generate TOC HTML
+                toc_html = self.generate_toc_html(headings)
 
                 # Load and fill post template
                 post_template = self.load_template("post")
@@ -145,6 +232,7 @@ class SiteBuilder:
                 post_content = post_template.replace("{{ title }}", post["title"])
                 post_content = post_content.replace("{{ date }}", post["date_str"])
                 post_content = post_content.replace("{{ content }}", post_html)
+                post_content = post_content.replace("{{ toc }}", toc_html)
                 post_content = post_content.replace(
                     "{{ site_name }}", self.config["name"]
                 )
