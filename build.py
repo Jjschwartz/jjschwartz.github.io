@@ -127,7 +127,7 @@ class SiteBuilder:
         if not filtered_headings:
             return ""
         
-        html = '<nav class="toc">\n<h3>Contents</h3>\n<ul class="toc-list">\n'
+        html = '<nav class="toc">\n<ul class="toc-list">\n'
         
         for heading in filtered_headings:
             indent_class = f"toc-level-{heading['level']}"
@@ -146,6 +146,22 @@ class SiteBuilder:
                 pattern = f'<{heading["tag"]}>'
                 replacement = f'<{heading["tag"]} id="{heading["id"]}">'
                 html_content = html_content.replace(pattern, replacement, 1)
+        
+        return html_content
+
+    def wrap_tables_in_containers(self, html_content):
+        """Wrap tables in scrollable containers for horizontal scrolling"""
+        import re
+        
+        # Pattern to match table tags
+        table_pattern = r'(<table[^>]*>.*?</table>)'
+        
+        def wrap_table(match):
+            table_html = match.group(1)
+            return f'<div class="table-container">{table_html}</div>'
+        
+        # Replace all tables with wrapped versions
+        html_content = re.sub(table_pattern, wrap_table, html_content, flags=re.DOTALL)
         
         return html_content
 
@@ -218,6 +234,9 @@ class SiteBuilder:
                     extensions=["tables", "fenced_code", "footnotes"]
                 )
                 post_html = md.convert(post["content"])
+
+                # Wrap tables in scrollable containers
+                post_html = self.wrap_tables_in_containers(post_html)
 
                 # Extract headings for TOC
                 toc_extractor = TOCExtractor()

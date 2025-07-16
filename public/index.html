@@ -50,7 +50,7 @@
         }
         
         /* Force background on all major containers */
-        html, body, main, .container, article {
+        html, body, main, .container, article, header {
             background-color: var(--bg-color) !important;
         }
         
@@ -161,12 +161,21 @@
         }
         
         /* Better table styling */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
         table {
             background: var(--table-bg);
             border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin: 1.5rem 0;
+            border: none;
+            margin: 0;
             overflow: hidden;
+            width: 100%;
+            min-width: max-content;
         }
         
         th {
@@ -261,11 +270,6 @@
         }
         
         nav .nav-content {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
             background: var(--background-color);
             border-bottom: var(--border-width) solid var(--muted-border-color);
         }
@@ -293,7 +297,7 @@
         }
         
         main {
-            margin-top: 80px;
+            margin-top: 0;
         }
         
         .about-content {
@@ -380,7 +384,7 @@
         section {
             margin-bottom: 0rem;
             padding: 1rem 0;
-            scroll-margin-top: 100px; /* Ensure section headers appear below nav */
+            scroll-margin-top: 20px; /* Small margin for section headers */
         }
         
         footer {
@@ -438,24 +442,14 @@
             max-width: 250px;
             flex-shrink: 0;
             position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
+            top: 20px;
+            max-height: calc(100vh - 40px);
             overflow-y: auto;
             padding: 1rem;
             background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
             align-self: flex-start;
         }
         
-        .toc h3 {
-            margin-top: 0;
-            margin-bottom: 0.8rem;
-            font-size: 1rem;
-            color: var(--heading-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.4rem;
-        }
         
         .toc-list {
             list-style: none;
@@ -585,7 +579,7 @@
                 // Find the current active heading
                 for (let i = 0; i < headings.length; i++) {
                     const heading = headings[i];
-                    const headingTop = heading.element.offsetTop - 100; // Account for fixed nav
+                    const headingTop = heading.element.offsetTop - 20; // Small offset for smooth scrolling
                     
                     // If we're at the bottom of the page, highlight the last heading
                     if (scrollY + windowHeight >= documentHeight - 50) {
@@ -616,7 +610,7 @@
                     const targetId = this.getAttribute('data-target');
                     const target = document.getElementById(targetId);
                     if (target) {
-                        const offsetTop = target.offsetTop - 100; // Account for fixed nav
+                        const offsetTop = target.offsetTop - 20; // Small offset for smooth scrolling
                         window.scrollTo({
                             top: offsetTop,
                             behavior: 'smooth'
