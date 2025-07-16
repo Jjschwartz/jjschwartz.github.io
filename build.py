@@ -121,9 +121,15 @@ class SiteBuilder:
         if not headings:
             return ""
         
+        # Filter headings to only include levels 1 and 2 (h1 and h2)
+        filtered_headings = [h for h in headings if h['level'] <= 2]
+        
+        if not filtered_headings:
+            return ""
+        
         html = '<nav class="toc">\n<h3>Contents</h3>\n<ul class="toc-list">\n'
         
-        for heading in headings:
+        for heading in filtered_headings:
             indent_class = f"toc-level-{heading['level']}"
             html += f'<li class="{indent_class}">'
             html += f'<a href="#{heading["id"]}" class="toc-link" data-target="{heading["id"]}">'

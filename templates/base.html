@@ -42,8 +42,6 @@
             --spacing: 0.25rem;
         }
         
-        /* Remove overly broad inheritance rule that was hiding text */
-        
         html, body {
             background-color: var(--bg-color) !important;
             color: var(--text-color) !important;
@@ -262,7 +260,7 @@
             scroll-behavior: smooth;
         }
         
-        nav {
+        nav .nav-content {
             position: fixed;
             top: 0;
             left: 0;
@@ -493,6 +491,7 @@
             font-weight: 600;
         }
         
+        
         /* Different indentation levels for headings */
         .toc-level-1 .toc-link {
             padding-left: 0;
@@ -520,16 +519,6 @@
             padding-left: 4rem;
         }
         
-        /* Collapsible TOC - hide sub-headings by default */
-        .toc-list li:not(.toc-level-1):not(.toc-level-2) {
-            display: none;
-        }
-        
-        /* Show sub-headings for active sections */
-        .toc-list li.toc-level-1.has-active-child ~ li:not(.toc-level-1):not(.toc-level-2),
-        .toc-list li.toc-level-2.has-active-child ~ li:not(.toc-level-1):not(.toc-level-2) {
-            display: block;
-        }
         
         .post-main {
             flex: 1;
@@ -559,7 +548,7 @@
         }
     </style>
     
-    <!-- Table of Contents scroll tracking script -->
+    <!-- Table of Contents scroll tracking and smooth scrolling script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Only run TOC script on pages that have TOC
@@ -567,7 +556,6 @@
             if (tocLinks.length === 0) return;
             
             const headings = [];
-            const tocLinkMap = new Map();
             
             // Build map of headings and their corresponding TOC links
             tocLinks.forEach(link => {
@@ -579,7 +567,6 @@
                         link: link,
                         id: targetId
                     });
-                    tocLinkMap.set(targetId, link);
                 }
             });
             
@@ -614,30 +601,11 @@
                     }
                 }
                 
-                // Update active states and show/hide sub-headings
+                // Update active states
                 tocLinks.forEach(link => link.classList.remove('active'));
-                document.querySelectorAll('.toc-list li').forEach(li => {
-                    li.classList.remove('has-active-child');
-                });
                 
                 if (activeHeading) {
                     activeHeading.link.classList.add('active');
-                    
-                    // Show sub-headings for active section
-                    const activeLevel = parseInt(activeHeading.link.closest('li').className.match(/toc-level-(\d+)/)[1]);
-                    const activeParent = activeHeading.link.closest('li');
-                    
-                    // Mark parent as having active child to show sub-headings
-                    if (activeLevel <= 2) {
-                        activeParent.classList.add('has-active-child');
-                    }
-                    
-                    // Show sub-headings for this section
-                    let currentLi = activeParent.nextElementSibling;
-                    while (currentLi && currentLi.classList.contains('toc-level-' + (activeLevel + 1))) {
-                        currentLi.style.display = 'block';
-                        currentLi = currentLi.nextElementSibling;
-                    }
                 }
             }
             

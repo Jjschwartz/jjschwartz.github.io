@@ -42,8 +42,6 @@
             --spacing: 0.25rem;
         }
         
-        /* Remove overly broad inheritance rule that was hiding text */
-        
         html, body {
             background-color: var(--bg-color) !important;
             color: var(--text-color) !important;
@@ -262,7 +260,7 @@
             scroll-behavior: smooth;
         }
         
-        nav {
+        nav .nav-content {
             position: fixed;
             top: 0;
             left: 0;
@@ -493,6 +491,7 @@
             font-weight: 600;
         }
         
+        
         /* Different indentation levels for headings */
         .toc-level-1 .toc-link {
             padding-left: 0;
@@ -520,16 +519,6 @@
             padding-left: 4rem;
         }
         
-        /* Collapsible TOC - hide sub-headings by default */
-        .toc-list li:not(.toc-level-1):not(.toc-level-2) {
-            display: none;
-        }
-        
-        /* Show sub-headings for active sections */
-        .toc-list li.toc-level-1.has-active-child ~ li:not(.toc-level-1):not(.toc-level-2),
-        .toc-list li.toc-level-2.has-active-child ~ li:not(.toc-level-1):not(.toc-level-2) {
-            display: block;
-        }
         
         .post-main {
             flex: 1;
@@ -559,7 +548,7 @@
         }
     </style>
     
-    <!-- Table of Contents scroll tracking script -->
+    <!-- Table of Contents scroll tracking and smooth scrolling script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Only run TOC script on pages that have TOC
@@ -567,7 +556,6 @@
             if (tocLinks.length === 0) return;
             
             const headings = [];
-            const tocLinkMap = new Map();
             
             // Build map of headings and their corresponding TOC links
             tocLinks.forEach(link => {
@@ -579,7 +567,6 @@
                         link: link,
                         id: targetId
                     });
-                    tocLinkMap.set(targetId, link);
                 }
             });
             
@@ -614,30 +601,11 @@
                     }
                 }
                 
-                // Update active states and show/hide sub-headings
+                // Update active states
                 tocLinks.forEach(link => link.classList.remove('active'));
-                document.querySelectorAll('.toc-list li').forEach(li => {
-                    li.classList.remove('has-active-child');
-                });
                 
                 if (activeHeading) {
                     activeHeading.link.classList.add('active');
-                    
-                    // Show sub-headings for active section
-                    const activeLevel = parseInt(activeHeading.link.closest('li').className.match(/toc-level-(\d+)/)[1]);
-                    const activeParent = activeHeading.link.closest('li');
-                    
-                    // Mark parent as having active child to show sub-headings
-                    if (activeLevel <= 2) {
-                        activeParent.classList.add('has-active-child');
-                    }
-                    
-                    // Show sub-headings for this section
-                    let currentLi = activeParent.nextElementSibling;
-                    while (currentLi && currentLi.classList.contains('toc-level-' + (activeLevel + 1))) {
-                        currentLi.style.display = 'block';
-                        currentLi = currentLi.nextElementSibling;
-                    }
                 }
             }
             
@@ -691,30 +659,14 @@
 <li class="toc-level-2"><a href="#training-my-first-gpt2" class="toc-link" data-target="training-my-first-gpt2">Training my first GPT2</a></li>
 <li class="toc-level-2"><a href="#scoreboard-with-baseline" class="toc-link" data-target="scoreboard-with-baseline">Scoreboard with Baseline</a></li>
 <li class="toc-level-2"><a href="#hardware-juicing" class="toc-link" data-target="hardware-juicing">Hardware juicing</a></li>
-<li class="toc-level-3"><a href="#mps-on-m3" class="toc-link" data-target="mps-on-m3">MPS on M3</a></li>
-<li class="toc-level-3"><a href="#cuda-on-nvidia-rtx-3090-gpu" class="toc-link" data-target="cuda-on-nvidia-rtx-3090-gpu">CUDA on Nvidia RTX 3090 GPU</a></li>
-<li class="toc-level-3"><a href="#the-big-one-cuda-on-nvidia-h100-gpu" class="toc-link" data-target="the-big-one-cuda-on-nvidia-h100-gpu">The big one, CUDA on Nvidia H100 GPU</a></li>
-<li class="toc-level-3"><a href="#all-together-now" class="toc-link" data-target="all-together-now">All together now</a></li>
 <li class="toc-level-2"><a href="#scoreboard-after-hardware-optimizations" class="toc-link" data-target="scoreboard-after-hardware-optimizations">Scoreboard after hardware optimizations</a></li>
 <li class="toc-level-2"><a href="#side-quest-model-flop-utilization-mfu" class="toc-link" data-target="side-quest-model-flop-utilization-mfu">Side quest: Model FLOP Utilization (MFU)</a></li>
-<li class="toc-level-3"><a href="#calculating-mfu" class="toc-link" data-target="calculating-mfu">Calculating MFU</a></li>
-<li class="toc-level-3"><a href="#mfu-for-gpt2-124m" class="toc-link" data-target="mfu-for-gpt2-124m">MFU for GPT2 124M</a></li>
 <li class="toc-level-2"><a href="#software-optimizations-getting-all-the-juice" class="toc-link" data-target="software-optimizations-getting-all-the-juice">Software optimizations: getting all the juice</a></li>
-<li class="toc-level-3"><a href="#algorithmic-improvements" class="toc-link" data-target="algorithmic-improvements">Algorithmic improvements</a></li>
-<li class="toc-level-4"><a href="#usingbfloat16" class="toc-link" data-target="usingbfloat16">Usingbfloat16</a></li>
-<li class="toc-level-4"><a href="#using-flash-attention" class="toc-link" data-target="using-flash-attention">Using Flash Attention</a></li>
-<li class="toc-level-4"><a href="#torchcompile" class="toc-link" data-target="torchcompile">torch.compile</a></li>
-<li class="toc-level-4"><a href="#usingfusedadamw" class="toc-link" data-target="usingfusedadamw">Usingfused_adamw</a></li>
-<li class="toc-level-4"><a href="#enabling-tensorcores" class="toc-link" data-target="enabling-tensorcores">Enabling Tensorcores</a></li>
-<li class="toc-level-4"><a href="#all-together" class="toc-link" data-target="all-together">All together</a></li>
-<li class="toc-level-3"><a href="#tuning-the-batch-size" class="toc-link" data-target="tuning-the-batch-size">Tuning the batch size</a></li>
 <li class="toc-level-2"><a href="#scoreboard-after-software-optimizations" class="toc-link" data-target="scoreboard-after-software-optimizations">Scoreboard after software optimizations</a></li>
 <li class="toc-level-2"><a href="#getting-parallel-ddp" class="toc-link" data-target="getting-parallel-ddp">Getting parallel: DDP</a></li>
 <li class="toc-level-2"><a href="#scoreboard-after-distributed-training" class="toc-link" data-target="scoreboard-after-distributed-training">Scoreboard after Distributed Training</a></li>
 <li class="toc-level-2"><a href="#training-gpt2-124-m-on-10b-tokens" class="toc-link" data-target="training-gpt2-124-m-on-10b-tokens">Training GPT2 124 M on 10B tokens</a></li>
-<li class="toc-level-3"><a href="#hellaswag-benchmark" class="toc-link" data-target="hellaswag-benchmark">Hellaswag Benchmark</a></li>
 <li class="toc-level-2"><a href="#scaling-up-to-full-size-gpt2-model" class="toc-link" data-target="scaling-up-to-full-size-gpt2-model">Scaling up to full size GPT2 model</a></li>
-<li class="toc-level-3"><a href="#evaluating-gpt2-15b" class="toc-link" data-target="evaluating-gpt2-15b">Evaluating GPT2 1.5B</a></li>
 <li class="toc-level-2"><a href="#summary" class="toc-link" data-target="summary">Summary</a></li>
 <li class="toc-level-2"><a href="#footnotes" class="toc-link" data-target="footnotes">Footnotes</a></li>
 </ul>
