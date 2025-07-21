@@ -437,28 +437,138 @@
             font-size: 0.9rem;
         }
         
-        /* Table of Contents Styling */
+        /* Minimized Table of Contents Styling */
         .post-layout {
             display: flex;
-            gap: 2rem;
             align-items: flex-start;
             max-width: 100%;
+            position: relative;
         }
         
         .toc-sidebar {
-            width: 250px;
-            min-width: 250px;
-            max-width: 250px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-            padding: 1rem;
-            background: var(--bg-color);
-            align-self: flex-start;
+            position: fixed;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            z-index: 100;
+            transition: all 0.3s ease;
         }
         
+        .toc-sidebar.expanded {
+            width: 280px;
+            left: 20px;
+            top: 20px;
+            transform: none;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Minimized ToC - line indicators */
+        .toc-minimized {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+        
+        .toc-minimized.hidden {
+            display: none;
+        }
+        
+        .toc-line {
+            background: var(--muted-text);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .toc-line:hover {
+            background: var(--link-color);
+            transform: scaleX(1.2);
+        }
+        
+        .toc-line.active {
+            background: var(--link-color);
+            transform: scaleX(1.2);
+        }
+        
+        /* Different thicknesses for heading levels - horizontal lines */
+        .toc-line.toc-level-1 {
+            height: 4px;
+            width: 20px;
+        }
+        
+        .toc-line.toc-level-2 {
+            height: 3px;
+            width: 16px;
+        }
+        
+        .toc-line.toc-level-3 {
+            height: 2px;
+            width: 14px;
+        }
+        
+        .toc-line.toc-level-4 {
+            height: 2px;
+            width: 12px;
+        }
+        
+        .toc-line.toc-level-5 {
+            height: 1px;
+            width: 10px;
+        }
+        
+        .toc-line.toc-level-6 {
+            height: 1px;
+            width: 8px;
+        }
+        
+        /* Expanded ToC - full text version */
+        .toc-expanded {
+            display: none;
+        }
+        
+        .toc-expanded.visible {
+            display: block;
+        }
+        
+        .toc-expanded-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .toc-expanded-title {
+            font-weight: 600;
+            color: var(--heading-color);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .toc-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--muted-text);
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-close:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--link-color);
+        }
         
         .toc-list {
             list-style: none;
@@ -467,108 +577,111 @@
         }
         
         .toc-list li {
-            margin-bottom: 0.1rem;
+            margin-bottom: 0.05rem;
         }
         
         .toc-link {
             display: block;
-            padding: 0.2rem 0;
+            padding: 0.25rem 0.5rem;
             color: var(--muted-text);
             text-decoration: none;
             font-size: 0.8rem;
-            line-height: 1.3;
-            border-radius: 4px;
+            line-height: 1.2;
+            border-radius: 3px;
             transition: all 0.2s ease;
         }
         
         .toc-link:hover {
             color: var(--link-color);
             background: rgba(99, 102, 241, 0.1);
-            padding-left: 0.3rem;
+            transform: translateX(0.2rem);
         }
         
         .toc-link.active {
             color: var(--link-color);
             background: rgba(99, 102, 241, 0.1);
-            padding-left: 0.3rem;
             font-weight: 600;
         }
         
-        
         /* Different indentation levels for headings */
         .toc-level-1 .toc-link {
-            padding-left: 0;
+            margin-left: 0;
             font-weight: 600;
             font-size: 0.85rem;
         }
         
         .toc-level-2 .toc-link {
-            padding-left: 0.8rem;
+            margin-left: 0.8rem;
+            font-size: 0.8rem;
         }
         
         .toc-level-3 .toc-link {
-            padding-left: 1.6rem;
+            margin-left: 1.6rem;
+            font-size: 0.75rem;
         }
         
         .toc-level-4 .toc-link {
-            padding-left: 2.4rem;
+            margin-left: 2.4rem;
+            font-size: 0.75rem;
         }
         
         .toc-level-5 .toc-link {
-            padding-left: 3.2rem;
+            margin-left: 3.2rem;
+            font-size: 0.7rem;
         }
         
         .toc-level-6 .toc-link {
-            padding-left: 4rem;
+            margin-left: 4rem;
+            font-size: 0.7rem;
         }
-        
         
         .post-main {
             flex: 1;
             min-width: 0;
-            max-width: calc(100% - 250px - 2rem);
+            max-width: 100%;
             overflow-wrap: break-word;
+            margin-left: 30px; /* Space for minimized ToC */
         }
         
         /* Responsive design - hide TOC on smaller screens */
-        @media (max-width: 1024px) {
-            .post-layout {
-                flex-direction: column;
-            }
-            
-            .toc-sidebar {
-                position: static;
-                width: 100%;
-                max-height: none;
-                order: -1;
-            }
-        }
-        
         @media (max-width: 768px) {
             .toc-sidebar {
                 display: none;
             }
+            
+            .post-main {
+                margin-left: 0;
+            }
         }
     </style>
     
-    <!-- Table of Contents scroll tracking and smooth scrolling script -->
+    <!-- Minimized Table of Contents scroll tracking and expand/collapse script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Only run TOC script on pages that have TOC
+            const tocSidebar = document.querySelector('.toc-sidebar');
             const tocLinks = document.querySelectorAll('.toc-link');
-            if (tocLinks.length === 0) return;
+            
+            // Only run TOC script on pages that have TOC
+            if (!tocSidebar || tocLinks.length === 0) return;
             
             const headings = [];
+            const tocLines = [];
             
             // Build map of headings and their corresponding TOC links
-            tocLinks.forEach(link => {
+            tocLinks.forEach((link, index) => {
                 const targetId = link.getAttribute('data-target');
                 const heading = document.getElementById(targetId);
                 if (heading) {
+                    // Get the heading level from the parent li class
+                    const levelClass = link.closest('li').className.match(/toc-level-(\d+)/);
+                    const level = levelClass ? parseInt(levelClass[1]) : 1;
+                    
                     headings.push({
                         element: heading,
                         link: link,
-                        id: targetId
+                        id: targetId,
+                        level: level,
+                        index: index
                     });
                 }
             });
@@ -578,7 +691,109 @@
                 return a.element.offsetTop - b.element.offsetTop;
             });
             
-            function updateActiveLink() {
+            // Create minimized ToC structure
+            function createMinimizedToc() {
+                const minimizedToc = document.createElement('div');
+                minimizedToc.className = 'toc-minimized';
+                
+                headings.forEach((heading, index) => {
+                    const line = document.createElement('div');
+                    line.className = `toc-line toc-level-${heading.level}`;
+                    line.setAttribute('data-target', heading.id);
+                    line.setAttribute('data-index', index);
+                    
+                    minimizedToc.appendChild(line);
+                    tocLines.push(line);
+                });
+                
+                // Click anywhere on minimized ToC to expand full ToC
+                minimizedToc.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    expandToc();
+                });
+                
+                return minimizedToc;
+            }
+            
+            // Create expanded ToC structure
+            function createExpandedToc() {
+                const expandedToc = document.createElement('div');
+                expandedToc.className = 'toc-expanded';
+                
+                // Header with close button
+                const header = document.createElement('div');
+                header.className = 'toc-expanded-header';
+                
+                const title = document.createElement('h3');
+                title.className = 'toc-expanded-title';
+                title.textContent = 'Table of Contents';
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'toc-close';
+                closeBtn.innerHTML = '×';
+                closeBtn.addEventListener('click', collapseToc);
+                
+                header.appendChild(title);
+                header.appendChild(closeBtn);
+                expandedToc.appendChild(header);
+                
+                // Clone the original ToC list
+                const originalToc = tocSidebar.querySelector('.toc-list');
+                if (originalToc) {
+                    expandedToc.appendChild(originalToc.cloneNode(true));
+                    
+                    // Re-attach event listeners to cloned links
+                    const clonedLinks = expandedToc.querySelectorAll('.toc-link');
+                    clonedLinks.forEach(link => {
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const targetId = this.getAttribute('data-target');
+                            const target = document.getElementById(targetId);
+                            if (target) {
+                                const offsetTop = target.offsetTop - 20;
+                                window.scrollTo({
+                                    top: offsetTop,
+                                    behavior: 'smooth'
+                                });
+                                collapseToc(); // Close ToC after navigation
+                            }
+                        });
+                    });
+                }
+                
+                return expandedToc;
+            }
+            
+            // Initialize ToC elements
+            const minimizedToc = createMinimizedToc();
+            const expandedToc = createExpandedToc();
+            
+            // Clear original content and add new structure
+            tocSidebar.innerHTML = '';
+            tocSidebar.appendChild(minimizedToc);
+            tocSidebar.appendChild(expandedToc);
+            
+            function expandToc() {
+                tocSidebar.classList.add('expanded');
+                minimizedToc.classList.add('hidden');
+                expandedToc.classList.add('visible');
+            }
+            
+            function collapseToc() {
+                tocSidebar.classList.remove('expanded');
+                minimizedToc.classList.remove('hidden');
+                expandedToc.classList.remove('visible');
+            }
+            
+            // Close expanded ToC when clicking outside
+            document.addEventListener('click', function(e) {
+                if (tocSidebar.classList.contains('expanded') && 
+                    !tocSidebar.contains(e.target)) {
+                    collapseToc();
+                }
+            });
+            
+            function updateActiveIndicators() {
                 const scrollY = window.scrollY;
                 const windowHeight = window.innerHeight;
                 const documentHeight = document.documentElement.scrollHeight;
@@ -588,7 +803,7 @@
                 // Find the current active heading
                 for (let i = 0; i < headings.length; i++) {
                     const heading = headings[i];
-                    const headingTop = heading.element.offsetTop - 20; // Small offset for smooth scrolling
+                    const headingTop = heading.element.offsetTop - 50;
                     
                     // If we're at the bottom of the page, highlight the last heading
                     if (scrollY + windowHeight >= documentHeight - 50) {
@@ -604,35 +819,34 @@
                     }
                 }
                 
-                // Update active states
+                // Update active states for both minimized and expanded views
+                tocLines.forEach(line => line.classList.remove('active'));
                 tocLinks.forEach(link => link.classList.remove('active'));
                 
+                // Also update cloned links in expanded view
+                const expandedLinks = expandedToc.querySelectorAll('.toc-link');
+                expandedLinks.forEach(link => link.classList.remove('active'));
+                
                 if (activeHeading) {
-                    activeHeading.link.classList.add('active');
+                    // Update minimized indicator
+                    const activeLine = tocLines[activeHeading.index];
+                    if (activeLine) {
+                        activeLine.classList.add('active');
+                    }
+                    
+                    // Update expanded links
+                    const activeExpandedLink = expandedToc.querySelector(`[data-target="${activeHeading.id}"]`);
+                    if (activeExpandedLink) {
+                        activeExpandedLink.classList.add('active');
+                    }
                 }
             }
             
-            // Add smooth scrolling to TOC links
-            tocLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('data-target');
-                    const target = document.getElementById(targetId);
-                    if (target) {
-                        const offsetTop = target.offsetTop - 20; // Small offset for smooth scrolling
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-            
-            // Update active link on scroll
-            window.addEventListener('scroll', updateActiveLink);
+            // Update active indicators on scroll
+            window.addEventListener('scroll', updateActiveIndicators);
             
             // Initial update
-            updateActiveLink();
+            updateActiveIndicators();
         });
     </script>
 </head>
