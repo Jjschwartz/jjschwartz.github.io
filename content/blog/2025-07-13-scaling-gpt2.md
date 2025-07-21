@@ -8,7 +8,7 @@ Note, this post is not a tutorial on how to implement and train a GPT2 model - t
 
 > **Note:** All code is available on [github](https://github.com/Jjschwartz/gollem)
 
-## Why GPT2?
+## 1. Why GPT2?
 
 Why GPT2, it's kinda outdated isn't it? Well yes, but also the recipe for training LLMs has not changed that much since the GPT2. Furthermore, training GPT2 has a number of benefits. Firstly, there are a bunch of excellent tutorials covering implementing and training GPT2 [^1]. Secondly, with sizes ranging from 124M to 1.5B it offers a nice progression from a size I can run on my laptop up to size that really starts benefitting from industrial grade GPUs designed for AI workloads. Thirdly, the amount of data used to train GPT2 1.5B is quite modest at around 40B tokens, which can fit on any reasonable size machine (compared to the 10s of trillions of tokens for more recent models). And finally, it's the OG model that really put scaling on the map.
 
@@ -23,7 +23,7 @@ To be more precise, here are some technical specs for the different members of t
 | GPT-2 Large  | 774M       | 36       | 1280    | 20      | 5120  | 1024         | 50,257     |
 | GPT-2 XL     | 1.5B       | 48       | 1600    | 25      | 6400  | 1024         | 50,257     |
 
-## Training my first GPT2
+## 2. Training my first GPT2
 
 Before jump straight into train the largest GPT2 model on 40B tokens, it seems prudent to to make sure we can train a small model on a small dataset. So here we start with GPT-2 Small (124M) on the tiny Shakespeare dataset of around 300K tokens.
 
@@ -76,7 +76,7 @@ In total the model was trained on roughly 1M tokens (`1024 batch size * 1000 ste
 
 So it took us 26 minutes to train a 124M parameter model on 1M tokens. Scaling this up to the full size GPT2 which has 1.5B parameters and is trained on 10B tokens (the paper is 40B but lets keep the math simple), we have a 1 OOM increase in model parameters and 4 OOM increase in data. Even if we keep the model size the same and just scale up the data, training GPT2 124M would take $26 \text{ minutes} \times 10^4 = 260,000 \text{ minutes}$ or around 180 days. If we additionally scaled up the model parameters, assuming a naive 1 OOM decrease in tokens per second, this balloons to 1800 days. Ain't nobody got time for that, and that's assuming a 1.5B parameter model can even fit in memory on my laptop while training.
 
-## Scoreboard with Baseline
+## 3. Scoreboard with Baseline
 
 But before moving on, I'm going to introduce the scoreboard for tracking how training throughput changes as we layer on each improvement. Each row will be a new piece of hardware, software optimization, or some other change in our training setup. The "TPS" columns shows absolute throughput, while the "Speedup" column is the speedup over the baseline.
 
@@ -86,29 +86,29 @@ But before moving on, I'm going to introduce the scoreboard for tracking how tra
 
 For now our scoreboard only has the baseline entry. Fortunately, there are a bunch of optimizations we can do, starting with probably the biggest: hardware!
 
-## Hardware juicing
+## 4. Hardware Optimizations
 
 AI is a big deal and lots of smart people have invested a bunch of time improving hardware for AI training workloads. I am fortunate to have access to a few of these through my work's compute clusters, which my employer [Imbue](https://imbue.com/) graciously allowed me to use for this project during times it was not in use.
 
-### MPS on M3
+### 4.1 MPS on M3
 
 To start, I have a macbook with an M3 chip which aims to improved AI workloads. To make use of this the nice people at Apple created something they call [Metal Performance Shaders (MPS)](https://developer.apple.com/metal/pytorch/) which from my understanding is a library of deep learning specific kernels for apple hardware like the M3 chip. This is similar to CUDA for Nvidia GPUs and the best part, using MPS is as simple as changing `device=cpu` to `device=mps` in your training code.
 
 **Results**
 Training with MPS on the same laptop we get a 2x improvement in speed, going from 645 to **1499 TPS**, dropping the training time to around 12 min.
 
-### CUDA on Nvidia RTX 3090 GPU
+### 4.2 CUDA on Nvidia RTX 3090 GPU
 
 Next I tried the same training setup using CUDA on an RTX 3090, a decent GPU but by no means top of the line when it comes to AI training workloads. This is a little more effort as it requires running my code on a different machine and dealing with properly installing Nvidia drivers and CUDA. But other than that nothing in my code needs to change apart from `device=cuda`.
 
 **Results**
 Even with a GPU not targeted specifically for AI workloads, the speed up is huge, coming in at a whopping **11381 TPS**, on the order of 1 OOM speedup over training on a cpu and even MPS. This dropped the training time down to around 1.5 min for 1M tokens.
 
-### The big one, CUDA on Nvidia H100 GPU
+### 4.3 The big one, CUDA on Nvidia H100 GPU
 
 Finally I tried the industry workhorse GPU for LLM training: the H100. As expected we see another big boost with TPS increasing up to **27,026** tokens, dropping the time to process 1M tokens down to 35-40 s. Now we are talking.
 
-### All together now
+### 4.4 All together now
 
 Now we can do a side-by-side comparison of speed based on hardware. Firstly, let's look at the speedup in tokens per second with respect to using a `cpu`:
 
@@ -130,7 +130,7 @@ So big GPU make training go fast. Nothing too surprising there, except maybe the
 
 But even at 27K tokens per second, that would still require around 4 days to train a 124M param model on 10B tokens and around 40 days for a 1.5B param model (using our naive 1 OOM slowdown). Still far from desirable if we are to train something with 3-7B params on even more tokens. Fortunately there are still many optimizations we can make!
 
-## Scoreboard after hardware optimizations
+## 5. Scoreboard after hardware optimizations
 
 An here we have our scoreboard so far, after adding rows for each hardware setup we used.
 
@@ -141,7 +141,7 @@ An here we have our scoreboard so far, after adding rows for each hardware setup
 | Hardware: CUDA on RTX 3090       | 11381     | 17.64       |
 | **Hardware: CUDA on H100**       | **27026** | **41.90**   |
 
-## Side quest: Model FLOP Utilization (MFU)
+## 6. Side quest: Model FLOP Utilization (MFU)
 
 Before moving on to software optimizations, it would be good to have a way to measure how effectively we are using the hardware we have at our disposal.
 
@@ -158,7 +158,7 @@ Where:
 
 It's important to note that MFU aims to measure how much of your hardware's capacity is being used for computation that is *required* for training a model. Specifically, the forward and backward computations. It's possible that your MFU is 50% but you are actually using 80% of the hardwares capacity, but the extra 30% is going towards computations that are not fundamentally required for model training. The main example of this is rematerialization computations if you are using activation checkpointing.
 
-### Calculating MFU
+### 6.1 Calculating MFU
 
 Actually calculating MFU is fairly straight forward since it involves only 3 terms: `C`, `D`, `P`. Let's go over how to determine the value of each, starting with `D` and `P` first since these are the easiest.
 
@@ -170,7 +170,7 @@ Actually calculating MFU is fairly straight forward since it involves only 3 ter
 
 Alternatively, if you know the number of parameters your model has, a common estimate is $C \approx 6N$ where `N` is the number of non-embedding parameters in the model.
 
-### MFU for GPT2 124M
+### 6.2 MFU for GPT2 124M
 
 Now that we know about MFU, let's calculate it for the training runs we did using GPT2 124M. We will only focus on the GPUs since it's easy to get the theoretical numbers from official specs ([RTX 3090](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622), [H100](https://resources.nvidia.com/en-us-hopper-architecture/nvidia-tensor-core-gpu-datasheet)) and the H100 GPU is also what we'll be using moving forward.
 
@@ -193,7 +193,7 @@ So 34% is in the ballpark but still a bit low. However, the reported numbers are
 
 So let's do it!
 
-## Software optimizations: getting all the juice
+## 7. Software optimizations: getting all the juice
 
 There are a bunch of software optimizations we can make, most of which are very easy to apply in PyTorch. So let's try applying each one in sequence and see how we go.
 
@@ -204,7 +204,7 @@ There are two important types of optimizations I will explore:
 
 I'm going to tackle these in sequence, starting with the tweaks to the algorithms used since these also affect memory usage which changes what batch size we can use. So we will make the algorithmic improvements then see how changing the batch size affects throughput when applied on top of these improvements.
 
-### Algorithmic improvements
+### 7.1 Algorithmic improvements
 
 Some details on the setup for the following experiments:
 
@@ -220,7 +220,7 @@ Also to recap the values we got for our baseline run on the H100 without additio
 
 Here we include the peak GPU memory usage measured during the run. This is useful for seeing how each optimization affects GPU memory usage which will become an important factor once we look at scaling up to the full size GPT2 model and beyond.
 
-#### Using `bfloat16`
+#### 7.1.1 Using `bfloat16`
 
 The first optimization is to switch to using `bfloat16`, which is a simple one to implement using the `torch.autocast` context manager, something like the following:
 
@@ -247,7 +247,7 @@ The important thing is to use the `torch.autocast` context during the model forw
 - Speedup: 1.59X
 - Peak mem usage: 3514 MiB (0.8X baseline)
 
-#### Using Flash Attention
+#### 7.1.2 Using Flash Attention
 
 Attention is a notoriously expensive operation in transformers, primarily due to it being quadratic in sequence length, i.e. $O(N^2)$ for sequence length $N$. Fortunately, there have been a number of low level optimizations around making attention faster and less memory intensive. The most widely used optimized attention implementation is Flash Attention ([paper](https://arxiv.org/abs/2205.14135), [pytorch](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)). The details of flash attention are fairly involved, and somewhat beyond me without spending a bunch more time studying it. Thankfully, using it in practice is easy. Simply swap your existing code for computing attention with pytorch's `scaled_dot_product_attention` function:
 
@@ -272,7 +272,7 @@ z = F.scaled_dot_product_attention(q, k, v, is_causal=True)
 
 The speed up is not as big as switching from `float32` to `bfloat32` but still very good all things considered. Another big thing to notice is that we also see a significant drop in memory usage, which is a big advantage of flash attention especially as you start increasing the model context length.
 
-#### `torch.compile`
+#### 7.1.3 `torch.compile`
 
 Next up is using [`torch.compile`](https://pytorch.org/tutorials/intermediate/torch_compile_tutorial.html) which is a relatively new addition to pytorch, added in version 2.0. As per the docs: "`torch.compile` makes PyTorch code run faster by JIT-compiling PyTorch code into optimized kernels, all while requiring minimal code changes."
 
@@ -294,7 +294,7 @@ This will return a new "compiled" version of the model, which for the most part 
 
 Another solid improvement in speed, and minor memory improvement. Yay!
 
-#### Using `fused_adamw`
+#### 7.1.4 Using `fused_adamw`
 
 Flash attention is an example of using low level hardware specific optimizations to improve the speed and memory usage of an important part of transformer training workloads. But there is nothing stopping similar improvements being made in other areas of the workload. In this case we apply an optimization to improve the optimizer `AdamW` used for updating the model weights during backprop. The specific optimization is to introduce the use of fused operations which "fuse" what were multiple distinct steps into a single GPU kernel operation.
 
@@ -351,7 +351,7 @@ This type of fusion can improve speed by making better use of the parallel capac
 
 Another big improvement in terms of speed!
 
-#### Enabling Tensorcores
+#### 7.1.5 Enabling Tensorcores
 
 Tensorcores are one of the big architectural improvements of modern AI specialized GPUs like the H100. They are essentially, in the words of claude, matrix multiplication accelerators that can perform mixed-precision operations with significantly higher throughput than standard CUDA cores. Like the previous optimizations, making use of tensorcores is simple, just set pytorch float32 precision to use the `TensorFloat32` (`tfloat32`) data type:
 
@@ -380,7 +380,7 @@ In this case we see no improvement :(, but looking into this a bit more this is 
 
 We see that these are roughly equivalent, and adding `tfloat32` on top of `bfloat16` makes no meaningful difference. It is interesting that `tfloat32` by itself is a little faster than using `bfloat16`. I'm not 100% sure why this is, but if I was to hazard a guess it would be due to greater overhead casting from `float32` to `bfloat16` and back, than for `tfloat32`, but I'm really not sure. It'd be interesting to see if this still holds for larger batch sizes and models since the theoretical throughput of the H100 for `bfloat16` is twice that of `tfloat32`.
 
-#### All together
+#### 7.1.6 All together
 
 So let's compare all of these optimizations side-by-side. Below is a plot of the effect of each algorithmic improvements on different performance metrics. Overall we get ~3x speedup in tokens per second via these relatively simple optimizations, from 27K to almost 80K. We also get a decent drop in memory usage, though we will have to wait and see how this translates to larger models and batch sizes.
 
@@ -388,7 +388,7 @@ Important to note is that even after this 3x improvement in TPS, our MFU@`bfloat
 
 ![gpt2_software_optimization_algorithmic](../assets/blog/2025-07-13-scaling-gpt2/gpt2_software_optimization_algorithmic.png)
 
-### Tuning the batch size
+### 7.2 Tuning the batch size
 
 So far all our testing and experiments have been done with a batch size of 1024 tokens, or more specifically a single sequence of 1024 tokens (i.e. the context size of GPT2). GPUs excel at parallel computation, and in general we can expect to see an improvement in throughput as the batch size (and thus the matrix multiplication size) increases up to some threshold or memory limit. So let's increase the batch size by doubling the number of sequences until we run out of memory.
 
@@ -400,7 +400,7 @@ With my setup running on a single H100, I largest power of 2 batch size before t
 
 Importantly, we see a huge increase in throughput from increasing the batch size, hitting close to **350K TPS** for the largest batch size, which is around a 13X speedup over the base setup (no optimizations + batch size of 1024 tokens) on a H100. We also see that MFU has also improved to around 30% for the largest batch size. Though, my expectation was that this would be higher, so I'm left wondering if there is even more we can do to improve efficiency here.
 
-## Scoreboard after software optimizations
+## 8. Scoreboard after software optimizations
 
 So to review, after applying algorithmic optimizations and tuning the batch size we were able to improve throughput when running on a H100 GPU from 27K TPS up to a much better 350K TPS. This is ~13X or 1 OOM speedup!. Compare this to where we started, running at a measly 645 TPS on my laptop CPU, so far we've managed a whopping 542X speedup, around $\log_{10}(542) = 2.73$ OOM!
 
@@ -421,7 +421,7 @@ So how does this look for training our 1.5B model? At 350K TPS it would take aro
 
 So with all these optimization we are looking at a reasonable training time for a small but non-trivial sized model. But so far we have still only been using a single GPU, while frontier model labs use clusters of thousands. So how much better can we do if we scale up to a full node of 8 H100's?
 
-## Getting parallel: DDP
+## 9. Getting parallel: DDP
 
 Perhaps the simplest way to parallelize training of LLMs is through **Distributed Data Parallel** (DDP), where the model and optimizer is mirrored across multiple GPUs while each GPU processes a different slice of the current batch of data. This parallelization across the data dimension is why this strategy is referred to as **Data parallel**.
 
@@ -445,7 +445,7 @@ As a sanity check to make sure we are still getting the same model performance w
 
 ![6_gpt2_124M_training_loss_vs_num_gpus_by_step](../assets/blog/2025-07-13-scaling-gpt2/6_gpt2_124M_training_loss_vs_num_gpus_by_step.png) ![6_gpt2_124M_training_loss_vs_num_gpus_by_time](../assets/blog/2025-07-13-scaling-gpt2/6_gpt2_124M_training_loss_vs_num_gpus_by_time.png)
 
-## Scoreboard after Distributed Training
+## 10. Scoreboard after Distributed Training
 
 Reviewing our journey a little bit, we started with 645 TPS on my laptop CPU, and we are now at 3M TPS on a single node of 8 H100s. This is a 4,723x or $\log_{10}(4651) = 3.67$ OOM speedup and takes the time to train GPT2 124M on 10B tokens from 180 days down to 55 min!. Also recall that on a single GPU with all the optimizations it was going to take around 8 hours for the same training run, here we get a clean 8X speedup.
 
@@ -463,7 +463,7 @@ Reviewing our journey a little bit, we started with 645 TPS on my laptop CPU, an
 | Software: larger batch size (65K) | 350,000       | 542.64       |
 | **Distributed: DDP on 8 H100's**  | **3,046,409** | **4,723.11** |
 
-## Training GPT2 124 M on 10B tokens
+## 11. Training GPT2 124 M on 10B tokens
 
 Ok now that we have spent all this time optimizing our training setup let's do a full training run of 10B tokens with GPT2 124M.
 
@@ -477,7 +477,7 @@ And here is a very satisfying learning curve:
 
 We observe a smooth drop in loss, which is very promising.
 
-### Hellaswag Benchmark
+### 11.1 Hellaswag Benchmark
 
 Testing our trained model on the hellaswag benchmark, we get comparable results Karpathy's llm.c. We can also see an appreciable increase from the same model trained on 10x less data on the tinystories dataset.
 
@@ -489,7 +489,7 @@ Testing our trained model on the hellaswag benchmark, we get comparable results 
 
 Very validating :)
 
-## Scaling up to full size GPT2 model
+## 12. Scaling up to full size GPT2 model
 
 Ok at this point we have successfully trained GPT2 124M on 10B tokens. The next step is to scale up to the full size model: GPT2 1.5B. Fortunately, since we are training on H100s which have 80GB of memory which can fit the full model with room to spare, switching to training GPT 1.5B is a simple as tweaking some hyperparameters and adjusting the batch size.
 
@@ -506,7 +506,7 @@ Of course training with a larger model comes at a cost. With the 10X increase in
 
 ![7_gpt2_1_5B_fineweb_edu_tps_by_time](../assets/blog/2025-07-13-scaling-gpt2/7_gpt2_1_5B_fineweb_edu_tps_by_time.png)
 
-### Evaluating GPT2 1.5B
+### 12.1 Evaluating GPT2 1.5B
 
 So how was does final model compare?
 
@@ -524,7 +524,7 @@ Below are the results of running the hellaswag evaluation. There is a noticeable
 
 **Note:** The `gpt2 1.5B llm.c` result I am assuming used 32B steps based on the train script in the `llm.c` directory which trains for 32K steps on the `fineweb edu 100B` dataset (at 1M tokens per step)
 
-## Summary
+## 13. Summary
 
 The goal of this project for me was to train a non-trivial size transformer, specifically GPT2 1.5B, from scratch. Prior to starting this project I would consider myself fairly familiar with deep learning, transformers, and LLMs, at least from an understanding point of view. However, I'd never properly trained anything that would be considered an LLM.
 
