@@ -47,8 +47,7 @@ PAPERS = [
         year=2025,
         venue="Journal of Autonomous Agents and Multi-Agent Systems (JAAMAS)",
         urls={
-            # TODO add link to journalpaper once it's published
-            "paper (coming soon)": "coming soon",
+            "paper": "https://link.springer.com/article/10.1007/s10458-025-09716-6",
             "workshop paper (ICAPS PRL workshop '24)": "https://icaps24.icaps-conference.org/program/workshops/prl-papers/17.pdf",
             "code": "https://github.com/RDLLab/posggym",
         },
