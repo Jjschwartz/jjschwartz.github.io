@@ -464,10 +464,15 @@
         }
         
         .toc-sidebar.expanded {
+            width: auto;
+        }
+        
+        .toc-expanded {
+            position: fixed;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
             width: 280px;
-            left: 20px;
-            top: 20px;
-            transform: none;
             max-height: calc(100vh - 40px);
             overflow-y: auto;
             padding: 1.5rem;
@@ -486,7 +491,7 @@
         }
         
         .toc-minimized.hidden {
-            display: none;
+            display: flex;
         }
         
         .toc-line {
@@ -540,6 +545,7 @@
         /* Expanded ToC - full text version */
         .toc-expanded {
             display: none;
+            z-index: 101;
         }
         
         .toc-expanded.visible {
@@ -709,22 +715,6 @@
                 const expandedToc = document.createElement('div');
                 expandedToc.className = 'toc-expanded';
                 
-                // Header with close button
-                const header = document.createElement('div');
-                header.className = 'toc-expanded-header';
-                
-                const title = document.createElement('h3');
-                title.className = 'toc-expanded-title';
-                title.textContent = 'Table of Contents';
-                
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'toc-close';
-                closeBtn.innerHTML = '×';
-                closeBtn.addEventListener('click', collapseToc);
-                
-                header.appendChild(title);
-                header.appendChild(closeBtn);
-                expandedToc.appendChild(header);
                 
                 // Clone the original ToC list
                 const originalToc = tocSidebar.querySelector('.toc-list');
@@ -761,23 +751,23 @@
             tocSidebar.appendChild(minimizedToc);
             tocSidebar.appendChild(expandedToc);
             
-            // Click anywhere on sidebar to expand full ToC
+            // Click anywhere on sidebar to toggle full ToC
             tocSidebar.addEventListener('click', function(e) {
                 e.stopPropagation();
-                if (!tocSidebar.classList.contains('expanded')) {
+                if (tocSidebar.classList.contains('expanded')) {
+                    collapseToc();
+                } else {
                     expandToc();
                 }
             });
             
             function expandToc() {
                 tocSidebar.classList.add('expanded');
-                minimizedToc.classList.add('hidden');
                 expandedToc.classList.add('visible');
             }
             
             function collapseToc() {
                 tocSidebar.classList.remove('expanded');
-                minimizedToc.classList.remove('hidden');
                 expandedToc.classList.remove('visible');
             }
             
