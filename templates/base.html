@@ -450,9 +450,17 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 4px;
+            width: 25px;
             z-index: 100;
             transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 8px 4px;
+            margin: -8px -4px;
+            border-radius: 8px;
+        }
+        
+        .toc-sidebar:hover {
+            background: rgba(46, 51, 56, 0.05);
         }
         
         .toc-sidebar.expanded {
@@ -473,7 +481,7 @@
         .toc-minimized {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.4rem;
             cursor: pointer;
         }
         
@@ -489,13 +497,13 @@
         }
         
         .toc-line:hover {
-            background: var(--link-color);
-            transform: scaleX(1.2);
+            background: var(--heading-color);
+            transform: scaleX(1.1);
         }
         
         .toc-line.active {
-            background: var(--link-color);
-            transform: scaleX(1.2);
+            background: var(--heading-color);
+            transform: scaleX(1.1);
         }
         
         /* Different thicknesses for heading levels - horizontal lines */
@@ -578,11 +586,12 @@
         
         .toc-list li {
             margin-bottom: 0.05rem;
+            padding: 0;
         }
         
         .toc-link {
             display: block;
-            padding: 0.25rem 0.5rem;
+            padding: 0.1rem 0.0rem;
             color: var(--muted-text);
             text-decoration: none;
             font-size: 0.8rem;
@@ -611,28 +620,13 @@
         }
         
         .toc-level-2 .toc-link {
-            margin-left: 0.8rem;
+            margin-left: 0;
             font-size: 0.8rem;
         }
         
         .toc-level-3 .toc-link {
-            margin-left: 1.6rem;
+            margin-left: 0.8rem;
             font-size: 0.75rem;
-        }
-        
-        .toc-level-4 .toc-link {
-            margin-left: 2.4rem;
-            font-size: 0.75rem;
-        }
-        
-        .toc-level-5 .toc-link {
-            margin-left: 3.2rem;
-            font-size: 0.7rem;
-        }
-        
-        .toc-level-6 .toc-link {
-            margin-left: 4rem;
-            font-size: 0.7rem;
         }
         
         .post-main {
@@ -706,11 +700,6 @@
                     tocLines.push(line);
                 });
                 
-                // Click anywhere on minimized ToC to expand full ToC
-                minimizedToc.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    expandToc();
-                });
                 
                 return minimizedToc;
             }
@@ -755,7 +744,6 @@
                                     top: offsetTop,
                                     behavior: 'smooth'
                                 });
-                                collapseToc(); // Close ToC after navigation
                             }
                         });
                     });
@@ -772,6 +760,14 @@
             tocSidebar.innerHTML = '';
             tocSidebar.appendChild(minimizedToc);
             tocSidebar.appendChild(expandedToc);
+            
+            // Click anywhere on sidebar to expand full ToC
+            tocSidebar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!tocSidebar.classList.contains('expanded')) {
+                    expandToc();
+                }
+            });
             
             function expandToc() {
                 tocSidebar.classList.add('expanded');

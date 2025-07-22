@@ -121,8 +121,8 @@ class SiteBuilder:
         if not headings:
             return ""
         
-        # Filter headings to only include levels 1 and 2 (h1 and h2)
-        filtered_headings = [h for h in headings if h['level'] <= 2]
+        # Filter headings to only include levels 1, 2, and 3 (h1, h2, h3)
+        filtered_headings = [h for h in headings if h['level'] <= 3]
         
         if not filtered_headings:
             return ""

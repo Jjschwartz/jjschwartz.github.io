@@ -450,9 +450,17 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 4px;
+            width: 25px;
             z-index: 100;
             transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 8px 4px;
+            margin: -8px -4px;
+            border-radius: 8px;
+        }
+        
+        .toc-sidebar:hover {
+            background: rgba(46, 51, 56, 0.05);
         }
         
         .toc-sidebar.expanded {
@@ -473,7 +481,7 @@
         .toc-minimized {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.4rem;
             cursor: pointer;
         }
         
@@ -489,13 +497,13 @@
         }
         
         .toc-line:hover {
-            background: var(--link-color);
-            transform: scaleX(1.2);
+            background: var(--heading-color);
+            transform: scaleX(1.1);
         }
         
         .toc-line.active {
-            background: var(--link-color);
-            transform: scaleX(1.2);
+            background: var(--heading-color);
+            transform: scaleX(1.1);
         }
         
         /* Different thicknesses for heading levels - horizontal lines */
@@ -578,11 +586,12 @@
         
         .toc-list li {
             margin-bottom: 0.05rem;
+            padding: 0;
         }
         
         .toc-link {
             display: block;
-            padding: 0.25rem 0.5rem;
+            padding: 0.1rem 0.0rem;
             color: var(--muted-text);
             text-decoration: none;
             font-size: 0.8rem;
@@ -611,28 +620,13 @@
         }
         
         .toc-level-2 .toc-link {
-            margin-left: 0.8rem;
+            margin-left: 0;
             font-size: 0.8rem;
         }
         
         .toc-level-3 .toc-link {
-            margin-left: 1.6rem;
+            margin-left: 0.8rem;
             font-size: 0.75rem;
-        }
-        
-        .toc-level-4 .toc-link {
-            margin-left: 2.4rem;
-            font-size: 0.75rem;
-        }
-        
-        .toc-level-5 .toc-link {
-            margin-left: 3.2rem;
-            font-size: 0.7rem;
-        }
-        
-        .toc-level-6 .toc-link {
-            margin-left: 4rem;
-            font-size: 0.7rem;
         }
         
         .post-main {
@@ -706,11 +700,6 @@
                     tocLines.push(line);
                 });
                 
-                // Click anywhere on minimized ToC to expand full ToC
-                minimizedToc.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    expandToc();
-                });
                 
                 return minimizedToc;
             }
@@ -755,7 +744,6 @@
                                     top: offsetTop,
                                     behavior: 'smooth'
                                 });
-                                collapseToc(); // Close ToC after navigation
                             }
                         });
                     });
@@ -772,6 +760,14 @@
             tocSidebar.innerHTML = '';
             tocSidebar.appendChild(minimizedToc);
             tocSidebar.appendChild(expandedToc);
+            
+            // Click anywhere on sidebar to expand full ToC
+            tocSidebar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!tocSidebar.classList.contains('expanded')) {
+                    expandToc();
+                }
+            });
             
             function expandToc() {
                 tocSidebar.classList.add('expanded');
@@ -875,14 +871,24 @@
 <li class="toc-level-2"><a href="#2-training-my-first-gpt2" class="toc-link" data-target="2-training-my-first-gpt2">2. Training my first GPT2</a></li>
 <li class="toc-level-2"><a href="#3-scoreboard-with-baseline" class="toc-link" data-target="3-scoreboard-with-baseline">3. Scoreboard with Baseline</a></li>
 <li class="toc-level-2"><a href="#4-hardware-optimizations" class="toc-link" data-target="4-hardware-optimizations">4. Hardware Optimizations</a></li>
+<li class="toc-level-3"><a href="#41-mps-on-m3" class="toc-link" data-target="41-mps-on-m3">4.1 MPS on M3</a></li>
+<li class="toc-level-3"><a href="#42-cuda-on-nvidia-rtx-3090-gpu" class="toc-link" data-target="42-cuda-on-nvidia-rtx-3090-gpu">4.2 CUDA on Nvidia RTX 3090 GPU</a></li>
+<li class="toc-level-3"><a href="#43-the-big-one-cuda-on-nvidia-h100-gpu" class="toc-link" data-target="43-the-big-one-cuda-on-nvidia-h100-gpu">4.3 The big one, CUDA on Nvidia H100 GPU</a></li>
+<li class="toc-level-3"><a href="#44-all-together-now" class="toc-link" data-target="44-all-together-now">4.4 All together now</a></li>
 <li class="toc-level-2"><a href="#5-scoreboard-after-hardware-optimizations" class="toc-link" data-target="5-scoreboard-after-hardware-optimizations">5. Scoreboard after hardware optimizations</a></li>
 <li class="toc-level-2"><a href="#6-side-quest-model-flop-utilization-mfu" class="toc-link" data-target="6-side-quest-model-flop-utilization-mfu">6. Side quest: Model FLOP Utilization (MFU)</a></li>
+<li class="toc-level-3"><a href="#61-calculating-mfu" class="toc-link" data-target="61-calculating-mfu">6.1 Calculating MFU</a></li>
+<li class="toc-level-3"><a href="#62-mfu-for-gpt2-124m" class="toc-link" data-target="62-mfu-for-gpt2-124m">6.2 MFU for GPT2 124M</a></li>
 <li class="toc-level-2"><a href="#7-software-optimizations-getting-all-the-juice" class="toc-link" data-target="7-software-optimizations-getting-all-the-juice">7. Software optimizations: getting all the juice</a></li>
+<li class="toc-level-3"><a href="#71-algorithmic-improvements" class="toc-link" data-target="71-algorithmic-improvements">7.1 Algorithmic improvements</a></li>
+<li class="toc-level-3"><a href="#72-tuning-the-batch-size" class="toc-link" data-target="72-tuning-the-batch-size">7.2 Tuning the batch size</a></li>
 <li class="toc-level-2"><a href="#8-scoreboard-after-software-optimizations" class="toc-link" data-target="8-scoreboard-after-software-optimizations">8. Scoreboard after software optimizations</a></li>
 <li class="toc-level-2"><a href="#9-getting-parallel-ddp" class="toc-link" data-target="9-getting-parallel-ddp">9. Getting parallel: DDP</a></li>
 <li class="toc-level-2"><a href="#10-scoreboard-after-distributed-training" class="toc-link" data-target="10-scoreboard-after-distributed-training">10. Scoreboard after Distributed Training</a></li>
 <li class="toc-level-2"><a href="#11-training-gpt2-124-m-on-10b-tokens" class="toc-link" data-target="11-training-gpt2-124-m-on-10b-tokens">11. Training GPT2 124 M on 10B tokens</a></li>
+<li class="toc-level-3"><a href="#111-hellaswag-benchmark" class="toc-link" data-target="111-hellaswag-benchmark">11.1 Hellaswag Benchmark</a></li>
 <li class="toc-level-2"><a href="#12-scaling-up-to-full-size-gpt2-model" class="toc-link" data-target="12-scaling-up-to-full-size-gpt2-model">12. Scaling up to full size GPT2 model</a></li>
+<li class="toc-level-3"><a href="#121-evaluating-gpt2-15b" class="toc-link" data-target="121-evaluating-gpt2-15b">12.1 Evaluating GPT2 1.5B</a></li>
 <li class="toc-level-2"><a href="#13-summary" class="toc-link" data-target="13-summary">13. Summary</a></li>
 <li class="toc-level-2"><a href="#footnotes" class="toc-link" data-target="footnotes">Footnotes</a></li>
 </ul>
