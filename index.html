@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonathon Schwartz</title>
+    <meta name="description" content="Personal website of Jonathon Schwartz">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    
+    <!-- MathJax for LaTeX math rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Obsidian-inspired light theme */
+        :root {
+            --bg-color: #fafafa; /* Clean light background */
+            --text-color: #2e3338; /* Slightly softer black */
+            --heading-color: #1a202c; /* Dark gray/black for headings */
+            --link-color: #6366f1; /* Indigo links */
+            --muted-text: #64748b; /* Muted text color */
+            --border-color: #e2e8f0; /* Light border */
+            --code-bg: #f1f5f9; /* Light code background */
+            --blockquote-bg: #f8fafc; /* Light blockquote background */
+            --table-bg: rgba(248, 250, 252, 0.5); /* Subtle table background */
+            
+            /* Override Pico.css variables */
+            --background-color: var(--bg-color) !important;
+            --color: var(--text-color) !important;
+            --spacing: 0.25rem;
+        }
+        
+        html, body {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            line-height: 1.65;
+        }
+        
+        /* Force background on all major containers */
+        html, body, main, .container, article, header {
+            background-color: var(--bg-color) !important;
+        }
+        
+        /* Override Pico.css article card styling */
+        article {
+            background: var(--bg-color) !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        /* Obsidian-style heading hierarchy */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--heading-color) !important;
+            margin-top: 2rem !important;
+            margin-bottom: 1rem !important;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+        
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 0 !important;
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.375rem;
+        }
+        
+        /* Better paragraph spacing */
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-color);
+        }
+        
+        /* Obsidian-style links */
+        a {
+            color: var(--link-color) !important;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Navigation links should be dark */
+        nav a {
+            color: var(--text-color) !important;
+        }
+        
+        /* Code block styling */
+        pre {
+            background: var(--code-bg) !important;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        code {
+            background: var(--code-bg) !important;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 0.875em;
+            color: var(--text-color);
+        }
+        
+        /* Obsidian-style blockquotes */
+        blockquote {
+            background: var(--blockquote-bg);
+            border-left: 4px solid var(--link-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: normal;
+        }
+        
+        /* Note callouts - when blockquote starts with **Note:** */
+        blockquote p:first-child:has(strong:first-child) {
+            font-style: normal;
+        }
+        
+        blockquote strong:first-child {
+            color: var(--link-color);
+            font-weight: 600;
+        }
+        
+        /* Special styling for different note types */
+        blockquote:has(strong:first-child:contains("Note:")) {
+            border-left-color: var(--link-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        blockquote:has(strong:first-child:contains("Warning:")) {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        blockquote:has(strong:first-child:contains("Tip:")) {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Better table styling */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        table {
+            background: var(--table-bg);
+            border-radius: 8px;
+            border: none;
+            margin: 0;
+            overflow: hidden;
+            width: 100%;
+            min-width: max-content;
+        }
+        
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--text-color);
+            padding: 0.75rem;
+        }
+        
+        td {
+            padding: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Better list styling */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Images with subtle styling */
+        img {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem auto;
+            display: block;
+            max-height: 500px;
+            width: auto;
+            max-width: 100%;
+        }
+        
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+        
+        /* MathJax styling */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+        
+        /* Display math (block equations) */
+        .MathJax_Display {
+            margin: 1.5rem 0 !important;
+        }
+        
+        /* Center display math */
+        mjx-container[display="true"] {
+            display: block !important;
+            text-align: center !important;
+            margin: 1.5rem 0 !important;
+        }
+        
+        /* Footnote styling */
+        .footnote {
+            font-size: 0.875rem;
+            color: var(--muted-text);
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border-color);
+        }
+        
+        .footnote p {
+            margin: 0.5rem 0;
+        }
+        
+        a.footnote-ref {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 0.8em;
+            vertical-align: super;
+            padding: 0 0.2em;
+        }
+        
+        a.footnote-ref:hover {
+            text-decoration: underline;
+        }
+        
+        .footnote-backref {
+            margin-left: 0.5rem;
+            font-size: 0.8em;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        nav .nav-content {
+            background: var(--background-color);
+            border-bottom: var(--border-width) solid var(--muted-border-color);
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .nav-left .nav-name {
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        
+        .nav-right {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-right a {
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        main {
+            margin-top: 0;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .about-left {
+            flex-shrink: 0;
+        }
+        
+        .profile-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .about-right {
+            flex: 1;
+        }
+        
+        .bio-text {
+            text-align: left;
+            line-height: 1.6;
+        }
+        
+        .bio-text p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+            
+            .bio-text {
+                text-align: center;
+            }
+        }
+        
+        .publication {
+            margin-bottom: 1.5rem;
+        }
+        
+        .publication-title {
+            font-weight: bold;
+        }
+        
+        .publication-venue {
+            font-style: italic;
+        }
+        
+        .project {
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .project-link {
+            font-weight: bold;
+            color: var(--link-color) !important;
+            text-decoration: none;
+        }
+        
+        .project-link:hover {
+            text-decoration: underline;
+        }
+        
+        .blog-post-item {
+            margin-bottom: 1rem;
+        }
+        
+        .blog-post-date {
+            color: var(--muted-text);
+            font-size: 0.9em;
+            font-weight: 400;
+        }
+        
+        section {
+            margin-bottom: 0rem;
+            padding: 1rem 0;
+            scroll-margin-top: 20px; /* Small margin for section headers */
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 0rem;
+            border-top: var(--border-width) solid var(--muted-border-color);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--text-color) !important;
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: var(--link-color) !important;
+        }
+        
+        .footer-link svg {
+            width: 36px;
+            height: 36px;
+            fill: currentColor;
+        }
+        
+        .footer-text {
+            margin: 0;
+            color: var(--muted-color);
+            font-size: 0.9rem;
+        }
+        
+        /* Minimized Table of Contents Styling */
+        .post-layout {
+            display: flex;
+            align-items: flex-start;
+            max-width: 100%;
+            position: relative;
+        }
+        
+        .toc-sidebar {
+            position: fixed;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            z-index: 100;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 8px 4px;
+            margin: -8px -4px;
+            border-radius: 8px;
+        }
+        
+        .toc-sidebar:hover {
+            background: rgba(46, 51, 56, 0.05);
+        }
+        
+        .toc-sidebar.expanded {
+            width: auto;
+        }
+        
+        .toc-expanded {
+            position: fixed;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Minimized ToC - line indicators */
+        .toc-minimized {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            cursor: pointer;
+        }
+        
+        .toc-minimized.hidden {
+            display: flex;
+        }
+        
+        .toc-line {
+            background: var(--muted-text);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .toc-line:hover {
+            background: var(--heading-color);
+            transform: scaleX(1.1);
+        }
+        
+        .toc-line.active {
+            background: var(--heading-color);
+            transform: scaleX(1.1);
+        }
+        
+        /* Different thicknesses for heading levels - horizontal lines */
+        .toc-line.toc-level-1 {
+            height: 4px;
+            width: 20px;
+        }
+        
+        .toc-line.toc-level-2 {
+            height: 3px;
+            width: 16px;
+        }
+        
+        .toc-line.toc-level-3 {
+            height: 2px;
+            width: 14px;
+        }
+        
+        .toc-line.toc-level-4 {
+            height: 2px;
+            width: 12px;
+        }
+        
+        .toc-line.toc-level-5 {
+            height: 1px;
+            width: 10px;
+        }
+        
+        .toc-line.toc-level-6 {
+            height: 1px;
+            width: 8px;
+        }
+        
+        /* Expanded ToC - full text version */
+        .toc-expanded {
+            display: none;
+            z-index: 101;
+        }
+        
+        .toc-expanded.visible {
+            display: block;
+        }
+        
+        .toc-expanded-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .toc-expanded-title {
+            font-weight: 600;
+            color: var(--heading-color);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .toc-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--muted-text);
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-close:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--link-color);
+        }
+        
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .toc-list li {
+            margin-bottom: 0.05rem;
+            padding: 0;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.1rem 0.0rem;
+            color: var(--muted-text);
+            text-decoration: none;
+            font-size: 0.8rem;
+            line-height: 1.2;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover {
+            color: var(--link-color);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(0.2rem);
+        }
+        
+        .toc-link.active {
+            color: var(--link-color);
+            background: rgba(99, 102, 241, 0.1);
+            font-weight: 600;
+        }
+        
+        /* Different indentation levels for headings */
+        .toc-level-1 .toc-link {
+            margin-left: 0;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .toc-level-2 .toc-link {
+            margin-left: 0;
+            font-size: 0.8rem;
+        }
+        
+        .toc-level-3 .toc-link {
+            margin-left: 0.8rem;
+            font-size: 0.75rem;
+        }
+        
+        .post-main {
+            flex: 1;
+            min-width: 0;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            margin-left: 30px; /* Space for minimized ToC */
+        }
+        
+        /* Responsive design - hide TOC on smaller screens */
+        @media (max-width: 768px) {
+            .toc-sidebar {
+                display: none;
+            }
+            
+            .post-main {
+                margin-left: 0;
+            }
+        }
+    </style>
+    
+    <!-- Minimized Table of Contents scroll tracking and expand/collapse script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocSidebar = document.querySelector('.toc-sidebar');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            // Only run TOC script on pages that have TOC
+            if (!tocSidebar || tocLinks.length === 0) return;
+            
+            const headings = [];
+            const tocLines = [];
+            
+            // Build map of headings and their corresponding TOC links
+            tocLinks.forEach((link, index) => {
+                const targetId = link.getAttribute('data-target');
+                const heading = document.getElementById(targetId);
+                if (heading) {
+                    // Get the heading level from the parent li class
+                    const levelClass = link.closest('li').className.match(/toc-level-(\d+)/);
+                    const level = levelClass ? parseInt(levelClass[1]) : 1;
+                    
+                    headings.push({
+                        element: heading,
+                        link: link,
+                        id: targetId,
+                        level: level,
+                        index: index
+                    });
+                }
+            });
+            
+            // Sort headings by their position in the document
+            headings.sort((a, b) => {
+                return a.element.offsetTop - b.element.offsetTop;
+            });
+            
+            // Create minimized ToC structure
+            function createMinimizedToc() {
+                const minimizedToc = document.createElement('div');
+                minimizedToc.className = 'toc-minimized';
+                
+                headings.forEach((heading, index) => {
+                    const line = document.createElement('div');
+                    line.className = `toc-line toc-level-${heading.level}`;
+                    line.setAttribute('data-target', heading.id);
+                    line.setAttribute('data-index', index);
+                    
+                    minimizedToc.appendChild(line);
+                    tocLines.push(line);
+                });
+                
+                
+                return minimizedToc;
+            }
+            
+            // Create expanded ToC structure
+            function createExpandedToc() {
+                const expandedToc = document.createElement('div');
+                expandedToc.className = 'toc-expanded';
+                
+                
+                // Clone the original ToC list
+                const originalToc = tocSidebar.querySelector('.toc-list');
+                if (originalToc) {
+                    expandedToc.appendChild(originalToc.cloneNode(true));
+                    
+                    // Re-attach event listeners to cloned links
+                    const clonedLinks = expandedToc.querySelectorAll('.toc-link');
+                    clonedLinks.forEach(link => {
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const targetId = this.getAttribute('data-target');
+                            const target = document.getElementById(targetId);
+                            if (target) {
+                                const offsetTop = target.offsetTop - 20;
+                                window.scrollTo({
+                                    top: offsetTop,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                    });
+                }
+                
+                return expandedToc;
+            }
+            
+            // Initialize ToC elements
+            const minimizedToc = createMinimizedToc();
+            const expandedToc = createExpandedToc();
+            
+            // Clear original content and add new structure
+            tocSidebar.innerHTML = '';
+            tocSidebar.appendChild(minimizedToc);
+            tocSidebar.appendChild(expandedToc);
+            
+            // Click anywhere on sidebar to toggle full ToC
+            tocSidebar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (tocSidebar.classList.contains('expanded')) {
+                    collapseToc();
+                } else {
+                    expandToc();
+                }
+            });
+            
+            function expandToc() {
+                tocSidebar.classList.add('expanded');
+                expandedToc.classList.add('visible');
+            }
+            
+            function collapseToc() {
+                tocSidebar.classList.remove('expanded');
+                expandedToc.classList.remove('visible');
+            }
+            
+            // Close expanded ToC when clicking outside
+            document.addEventListener('click', function(e) {
+                if (tocSidebar.classList.contains('expanded') && 
+                    !tocSidebar.contains(e.target)) {
+                    collapseToc();
+                }
+            });
+            
+            function updateActiveIndicators() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
+                let activeHeading = null;
+                
+                // Find the current active heading
+                for (let i = 0; i < headings.length; i++) {
+                    const heading = headings[i];
+                    const headingTop = heading.element.offsetTop - 50;
+                    
+                    // If we're at the bottom of the page, highlight the last heading
+                    if (scrollY + windowHeight >= documentHeight - 50) {
+                        activeHeading = headings[headings.length - 1];
+                        break;
+                    }
+                    
+                    // If this heading is visible or we've scrolled past it
+                    if (scrollY >= headingTop) {
+                        activeHeading = heading;
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Update active states for both minimized and expanded views
+                tocLines.forEach(line => line.classList.remove('active'));
+                tocLinks.forEach(link => link.classList.remove('active'));
+                
+                // Also update cloned links in expanded view
+                const expandedLinks = expandedToc.querySelectorAll('.toc-link');
+                expandedLinks.forEach(link => link.classList.remove('active'));
+                
+                if (activeHeading) {
+                    // Update minimized indicator
+                    const activeLine = tocLines[activeHeading.index];
+                    if (activeLine) {
+                        activeLine.classList.add('active');
+                    }
+                    
+                    // Update expanded links
+                    const activeExpandedLink = expandedToc.querySelector(`[data-target="${activeHeading.id}"]`);
+                    if (activeExpandedLink) {
+                        activeExpandedLink.classList.add('active');
+                    }
+                }
+            }
+            
+            // Update active indicators on scroll
+            window.addEventListener('scroll', updateActiveIndicators);
+            
+            // Initial update
+            updateActiveIndicators();
+        });
+    </script>
+</head>
+<body>
+    <!-- Homepage template with placeholder variables for dynamic content -->
+<nav>
+    <div class="container nav-content">
+        <div class="nav-left">
+            <strong><a href="#about" class="nav-name">Jonathon Schwartz</a></strong>
+        </div>
+        <div class="nav-right">
+            <a href="#about">About</a>
+            <a href="#research">Research</a>
+            <a href="#projects">Projects</a>
+            <a href="#blog">Blog</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- About Section -->
+    <section id="about">
+        <div class="about-content">
+            <div class="about-left">
+                <img src="assets/images/profile.jpg" alt="Jonathon Schwartz profile photo" class="profile-image">
+            </div>
+            <div class="about-right">
+                <div class="bio-text"><p>Hello! I am a researcher at <a href="https://imbue.com/">Imbue</a> where I work on building machine learning agents and software that help humans code.</p> <p>Previously, I completed my PhD at the Australian National University, advised by <a href="https://comp.anu.edu.au/people/hanna-kurniawati/">Hanna Kurniawati</a>. My thesis focused on building practical agents for partially observable, multi-agent environments by leveraging the combination of planning and reinforcement learning.</p><p>When I'm not writing code or running experiments, I spend my time rock climbing and being outside in nature.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research">
+        <h2>Selected Publications <a href="https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl">(see all)</a></h2>
+        <div class="publications">
+            <div class="publication">
+  <div class="publication-title">Towards Scalable Planning in Partially Observable, Multi-Agent Environments</div>
+  <div><strong>Jonathon Schwartz</strong></div>
+  <div class="publication-venue">PhD Thesis (2025)</div>
+  <div><a href="https://openresearch-repository.anu.edu.au/items/19003c21-3cf1-4694-87c1-86af06130548">thesis</a></div>
+</div>
+<div class="publication">
+  <div class="publication-title">POSGGym: A Library for Decision-Theoretic Planning and Learning in Partially Observable, Multi-Agent Environments</div>
+  <div><strong>Jonathon Schwartz</strong>, Rhys Newbury, Dana Kulić, Hanna Kurniawati</div>
+  <div class="publication-venue">Journal of Autonomous Agents and Multi-Agent Systems (JAAMAS) (2025)</div>
+  <div><a href="https://link.springer.com/article/10.1007/s10458-025-09716-6">paper</a> | <a href="https://icaps24.icaps-conference.org/program/workshops/prl-papers/17.pdf">workshop paper (ICAPS PRL workshop '24)</a> | <a href="https://github.com/RDLLab/posggym">code</a></div>
+</div>
+<div class="publication">
+  <div class="publication-title">Combining a Meta-Policy and Monte-Carlo Planning for Scalable Type-Based Reasoning in Partially Observable Environments</div>
+  <div><strong>Jonathon Schwartz</strong>, Hanna Kurniawati, Marcus Hutter</div>
+  <div class="publication-venue">International Conference on Autonomous Agents and Multiagent Systems (AAMAS) (2023)</div>
+  <div><a href="https://arxiv.org/pdf/2306.06067">paper</a> | <a href="https://www.ifaamas.org/Proceedings/aamas2023/pdfs/p2355.pdf">extended abstract version</a> | <a href="https://github.com/Jjschwartz/potmmcp">code</a></div>
+</div>
+<div class="publication">
+  <div class="publication-title">Online Planning for Interactive-POMDPs using Nested Monte Carlo Tree Search</div>
+  <div><strong>Jonathon Schwartz</strong>, Ruijia Zhou, Hanna Kurniawati</div>
+  <div class="publication-venue">International Conference on Intelligent Robots and Systems (IROS) (2022)</div>
+  <div><a href="https://rdl.cecs.anu.edu.au/papers/iros22_ntmcp.pdf">paper</a> | <a href="https://github.com/RDLLab/i-ntmcp">code</a></div>
+</div>
+<div class="publication">
+  <div class="publication-title">POMDP+ Information-Decay: Incorporating Defender's Behaviour in Autonomous Penetration Testing</div>
+  <div><strong>Jonathon Schwartz</strong>, Hanna Kurniawati, Edwin El-Mahassni</div>
+  <div class="publication-venue">International Conference on Automated Planning and Scheduling (ICAPS) (2020)</div>
+  <div><a href="https://aaai.org/ojs/index.php/ICAPS/article/download/6666/6520/">paper</a></div>
+</div>
+<div class="publication">
+  <div class="publication-title">CybORG: An Autonomous Cyber Operations Research Gym</div>
+  <div>Callum Baillie, Maxwell Standen, <strong>Jonathon Schwartz</strong>, Michael Docking, David Bowman, Junae Kim</div>
+  <div class="publication-venue">arXiv preprint (2020)</div>
+  <div><a href="https://arxiv.org/pdf/2002.10667">paper</a> | <a href="https://arxiv.org/pdf/2108.09118">extension (IJCAI '21)</a> | <a href="https://github.com/cage-challenge/CybORG">code</a></div>
+</div>
+<div class="publication">
+  <div class="publication-title">Autonomous Penetration Testing using Reinforcement Learning</div>
+  <div><strong>Jonathon Schwartz</strong></div>
+  <div class="publication-venue">Undergraduate Thesis (2019)</div>
+  <div><a href="https://arxiv.org/pdf/1905.05965">thesis</a> | <a href="https://github.com/Jjschwartz/NetworkAttackSimulator">code</a></div>
+</div>
+
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2>Open Source Projects</h2>
+        <div class="projects">
+            <div class="project">
+  <a href="https://github.com/RDLLab/posggym" target="_blank" class="project-link">POSGGym</a> A collection of environments and reference agents for planning and reinforcement learning research in partially observable, multi-agent environments. Related to this is also <a href='https://github.com/RDLLab/posggym-baselines' target='_blank'>POSGGym-Baselines</a> which contains baseline implementations of planning and reinforcement learning algorithms for POSGGym environments.
+</div>
+<div class="project">
+  <a href="https://github.com/Jjschwartz/NetworkAttackSimulator" target="_blank" class="project-link">Network Attack Simulator</a> Reinforcement learning environment for training autonomous network penetration testing agents. Simulates attack scenarios involving different network topologies vulnerabilities, scans, and exploits.
+</div>
+<div class="project">
+  <a href="https://github.com/Jjschwartz/miniDRL" target="_blank" class="project-link">miniDRL</a> Minimal implementations of distributed, recurrent, deep reinforcement learning algorithms (PPO, R2D2). Distributed RL, especially recurrent RL, gets pretty complex fast, this project contains some easy-to-follow stand-alone implementations of some distributed RL algorithms.
+</div>
+
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog">
+        <h2>Blog</h2>
+        <div class="blog-posts">
+            <div class="blog-post-item">
+  <div><a href="blog/scaling-gpt2.html">Training GPT2 from 650 to 3 million tokens per second</a></div>
+  <div class="blog-post-date">July 13, 2025</div>
+</div>
+
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="mailto:jonathon.schwartz12@gmail.com" class="footer-link" title="Email">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </a>
+                <a href="https://github.com/Jjschwartz" class="footer-link" title="GitHub" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://scholar.google.com.au/citations?user=cxKsPAYAAAAJ&hl" class="footer-link" title="Google Scholar" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="footer-text">Last updated: 2025-08-05</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
