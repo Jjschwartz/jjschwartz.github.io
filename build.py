@@ -9,11 +9,11 @@ Usage:
 """
 
 from datetime import datetime
+from html.parser import HTMLParser
 from pathlib import Path
 import re
 import shutil
 import traceback
-from html.parser import HTMLParser
 
 import markdown
 import yaml
@@ -23,50 +23,52 @@ from db import MY_NAME, PAPERS, PROJECTS
 
 class TOCExtractor(HTMLParser):
     """Extract headings from HTML to generate table of contents"""
-    
+
     def __init__(self):
         super().__init__()
         self.headings = []
         self.current_heading = None
         self.capture_text = False
-        
+
     def handle_starttag(self, tag, attrs):
-        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+        if tag in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             # Extract id from attributes if present
             heading_id = None
             for attr_name, attr_value in attrs:
-                if attr_name == 'id':
+                if attr_name == "id":
                     heading_id = attr_value
                     break
-            
+
             self.current_heading = {
-                'level': int(tag[1]),
-                'tag': tag,
-                'id': heading_id,
-                'text': ''
+                "level": int(tag[1]),
+                "tag": tag,
+                "id": heading_id,
+                "text": "",
             }
             self.capture_text = True
-    
+
     def handle_endtag(self, tag):
-        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] and self.current_heading:
+        if tag in ["h1", "h2", "h3", "h4", "h5", "h6"] and self.current_heading:
             # Generate id if not present
-            if not self.current_heading['id']:
-                self.current_heading['id'] = self.generate_id(self.current_heading['text'])
-            
+            if not self.current_heading["id"]:
+                self.current_heading["id"] = self.generate_id(
+                    self.current_heading["text"]
+                )
+
             self.headings.append(self.current_heading)
             self.current_heading = None
             self.capture_text = False
-    
+
     def handle_data(self, data):
         if self.capture_text and self.current_heading:
-            self.current_heading['text'] += data.strip()
-    
+            self.current_heading["text"] += data.strip()
+
     def generate_id(self, text):
         """Generate a URL-friendly id from heading text"""
         # Convert to lowercase, replace spaces with hyphens, remove special chars
-        id_text = re.sub(r'[^a-zA-Z0-9\s-]', '', text.lower())
-        id_text = re.sub(r'\s+', '-', id_text)
-        return id_text.strip('-')
+        id_text = re.sub(r"[^a-zA-Z0-9\s-]", "", text.lower())
+        id_text = re.sub(r"\s+", "-", id_text)
+        return id_text.strip("-")
 
 
 class SiteBuilder:
@@ -120,49 +122,49 @@ class SiteBuilder:
         """Generate HTML for table of contents"""
         if not headings:
             return ""
-        
+
         # Filter headings to only include levels 1, 2, and 3 (h1, h2, h3)
-        filtered_headings = [h for h in headings if h['level'] <= 3]
-        
+        filtered_headings = [h for h in headings if h["level"] <= 3]
+
         if not filtered_headings:
             return ""
-        
+
         html = '<nav class="toc">\n<ul class="toc-list">\n'
-        
+
         for heading in filtered_headings:
             indent_class = f"toc-level-{heading['level']}"
             html += f'<li class="{indent_class}">'
             html += f'<a href="#{heading["id"]}" class="toc-link" data-target="{heading["id"]}">'
-            html += f'{heading["text"]}</a></li>\n'
-        
-        html += '</ul>\n</nav>'
+            html += f"{heading['text']}</a></li>\n"
+
+        html += "</ul>\n</nav>"
         return html
 
     def add_heading_ids(self, html_content, headings):
         """Add id attributes to headings in HTML content"""
         for heading in headings:
-            if heading['id']:
+            if heading["id"]:
                 # Find the heading and add id attribute
-                pattern = f'<{heading["tag"]}>'
+                pattern = f"<{heading['tag']}>"
                 replacement = f'<{heading["tag"]} id="{heading["id"]}">'
                 html_content = html_content.replace(pattern, replacement, 1)
-        
+
         return html_content
 
     def wrap_tables_in_containers(self, html_content):
         """Wrap tables in scrollable containers for horizontal scrolling"""
         import re
-        
+
         # Pattern to match table tags
-        table_pattern = r'(<table[^>]*>.*?</table>)'
-        
+        table_pattern = r"(<table[^>]*>.*?</table>)"
+
         def wrap_table(match):
             table_html = match.group(1)
             return f'<div class="table-container">{table_html}</div>'
-        
+
         # Replace all tables with wrapped versions
         html_content = re.sub(table_pattern, wrap_table, html_content, flags=re.DOTALL)
-        
+
         return html_content
 
     def parse_blog_post(self, file_path):
@@ -294,13 +296,13 @@ class SiteBuilder:
         for paper in PAPERS:
             html += '<div class="publication">\n'
             html += f'  <div class="publication-title">{paper.title}</div>\n'
-            
+
             # Bold my name in the author list
             authors_text = paper.authors.replace(MY_NAME, f"<strong>{MY_NAME}</strong>")
             html += f"  <div>{authors_text}</div>\n"
             venue_year_block = '  <div class="publication-venue">'
             if paper.venue:
-                venue_year_block += f'{paper.venue}'
+                venue_year_block += f"{paper.venue}"
             venue_year_block += f" ({paper.year})</div>\n"
             html += venue_year_block
 
@@ -324,7 +326,7 @@ class SiteBuilder:
             html += '<div class="project">\n'
             html += (
                 f'  <a href="{project.url}" target="_blank" class="project-link">'
-                f'{project.title}</a> {project.description}\n'
+                f"{project.title}</a> {project.description}\n"
             )
             html += "</div>\n"
 

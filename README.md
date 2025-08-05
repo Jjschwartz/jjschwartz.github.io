@@ -19,12 +19,17 @@ A minimal static website. Includes a simple markdown to html generator.
 
 ## Deployment
 
+For deployment, github pages expects the site `index.html` to be in the root directory in the `gh-pages` branch. To avoid polluting the `main` branch with built files, we create a clean branch and copy the built files to the root directory each time we deploy.
+
 ```bash
+# Delete the gh-pages branch (if it exists)
+git branch -D gh-pages
+
 # Build the site
 uv run build.py
 
-# Switch to gh-pages branch (which is the branch that GitHub Pages uses)
-git switch gh-pages
+# Create and switch to gh-pages branch (which is the branch that GitHub Pages uses)
+git switch -c gh-pages
 
 # Copy built files to the root directory (which is the branch that GitHub Pages uses)
 cp -r public/* .
@@ -32,7 +37,8 @@ cp -r public/* .
 # Commit and push
 git add .
 git commit -m "Update site"
-git push origin gh-pages
+# force push to overwrite the remote gh-pages branch if it exists
+git push --force origin gh-pages
 ```
 
 ## Project Structure

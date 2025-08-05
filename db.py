@@ -37,8 +37,7 @@ PAPERS = [
         year=2025,
         venue="PhD Thesis",
         urls={
-            # TODO add link to thesis once it's published
-            "thesis (coming soon)": "coming soon",
+            "thesis": "https://openresearch-repository.anu.edu.au/items/19003c21-3cf1-4694-87c1-86af06130548",
         },
     ),
     Paper(
