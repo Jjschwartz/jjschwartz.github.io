@@ -39,6 +39,15 @@ git add .
 git commit -m "Update site"
 # force push to overwrite the remote gh-pages branch if it exists
 git push --force origin gh-pages
+
+# Switch back to main branch
+git switch main
+```
+
+Alternatively, you can run the `deploy.sh` script, which does the above steps:
+
+```bash
+./deploy.sh
 ```
 
 ## Project Structure
